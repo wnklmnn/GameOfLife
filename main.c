@@ -8,20 +8,36 @@ char** ErstelleSpielfeld( int sizeY, int sizeX, char initialValue);
 int main(){
     int sizeX=0;
     int sizeY=0;
+    char zufallsStart;
+    char stepbystep;
     char input[5];
     char **currentIteration;
     char **nextIteration;
-    // einlesen der Groesse
+    // einlesen der Einstellungen
     //Hoehe
     printf("Wie hoch soll das Spielfeld sein?: ");
 	do{
-	  fgets(input, sizeof(input), stdin);
+	    fgets(input, sizeof(input), stdin);
 	}while(sscanf(input, "%i", &sizeY)!=1);
+	
 	//Breite
     printf("Wie breit soll das Spielfeld sein?: ");
 	do{
-	  fgets(input, sizeof(input), stdin);
+	    fgets(input, sizeof(input), stdin);
 	}while(sscanf(input, "%i", &sizeX)!=1);
+	
+	//Zufallsstart
+	printf("Soll das Feld zufaellig erstellt werden?[y|n]:");
+	do{
+	    fgets(input, sizeof(input), stdin);
+	}while(sscanf(input, " %c", &zufallsStart)!=1 || (zufallsStart!='y'&& zufallsStart!='n'));
+	
+	//schritt-fuer-Schritt-betrieb
+	printf("Wollen sie die Iterationen einzeln durchgehen?[y|n]:");
+	do{
+	    fgets(input, sizeof(input), stdin);
+	}while(sscanf(input, " %c", &stepbystep)!=1 || (stepbystep!='y'&& stepbystep!='n'));
+	
 	
 	//Initialize Array
 	currentIteration = ErstelleSpielfeld( sizeY, sizeX, '0');
