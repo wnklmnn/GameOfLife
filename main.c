@@ -11,6 +11,8 @@ int main(){
     char zufallsStart;
     char stepbystep;
     char input[5];
+    char deadCellChar = ' ';
+    char aliveCellChar = 'X';
     char **currentIteration;
     char **nextIteration;
     // einlesen der Einstellungen
@@ -40,8 +42,8 @@ int main(){
 	
 	
 	//Initialize Array
-	currentIteration = ErstelleSpielfeld( sizeY, sizeX, '0');
-	nextIteration = ErstelleSpielfeld( sizeY, sizeX, '0');
+	currentIteration = ErstelleSpielfeld( sizeY, sizeX, deadCellChar);
+	nextIteration = ErstelleSpielfeld( sizeY, sizeX, deadCellChar);
 	
 	
 	
@@ -72,7 +74,7 @@ char** ErstelleSpielfeld( int sizeY, int sizeX, char initialValue){
 	}
 	for (o=0; o< sizeY;o++){
 	    for(i=0;i<sizeX;i++){
-	        feld[o][i] = '0';
+	        feld[o][i] = initialValue;
 	    }
     }
 	return feld;
