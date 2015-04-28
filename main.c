@@ -1,6 +1,14 @@
 #include<stdio.h>
 #include<stdlib.h>
 
+struct GameOfLifeSettings{
+    char deadCellChar;
+    char aliveCellChar;
+    int randomBeginning;
+    int sizeX;
+    int sizeY;
+    int stepByStep;
+};
 
 void Ausgabe2DArray(char** Array, int sizeX, int sizeY);
 char** ErstelleSpielfeld( int sizeY, int sizeX, char initialValue);
@@ -12,7 +20,7 @@ int main(){
     char stepbystep;
     char input[5];
     char deadCellChar = ' ';
-    char aliveCellChar = 'X';
+    //char aliveCellChar = 'X';
     char **currentIteration;
     char **nextIteration;
     // einlesen der Einstellungen
