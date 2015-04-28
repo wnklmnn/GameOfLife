@@ -7,58 +7,55 @@ struct GameOfLifeSettings{
     int randomBeginning;
     int sizeX;
     int sizeY;
-    int stepByStep;
+    char stepByStep;
+    char zufallsStart;
 };
 
 void Ausgabe2DArray(char** Array, int sizeX, int sizeY);
 char** ErstelleSpielfeld( int sizeY, int sizeX, char initialValue);
 
 int main(){
-    int sizeX=0;
-    int sizeY=0;
-    char zufallsStart;
-    char stepbystep;
     char input[5];
-    char deadCellChar = ' ';
-    //char aliveCellChar = 'X';
     char **currentIteration;
     char **nextIteration;
+    struct GameOfLifeSettings GoL;
+    GoL.deadCellChar = '0';
     // einlesen der Einstellungen
     //Hoehe
     printf("Wie hoch soll das Spielfeld sein?: ");
 	do{
 	    fgets(input, sizeof(input), stdin);
-	}while(sscanf(input, "%i", &sizeY)!=1);
+	}while(sscanf(input, "%i", &GoL.sizeY)!=1);
 	
 	//Breite
     printf("Wie breit soll das Spielfeld sein?: ");
 	do{
 	    fgets(input, sizeof(input), stdin);
-	}while(sscanf(input, "%i", &sizeX)!=1);
+	}while(sscanf(input, "%i", &GoL.sizeX)!=1);
 	
 	//Zufallsstart
 	printf("Soll das Feld zufaellig erstellt werden?[y|n]:");
 	do{
 	    fgets(input, sizeof(input), stdin);
-	}while(sscanf(input, " %c", &zufallsStart)!=1 || (zufallsStart!='y'&& zufallsStart!='n'));
+	}while(sscanf(input, " %c", &GoL.zufallsStart)!=1 || (GoL.zufallsStart!='y'&& GoL.zufallsStart!='n'));
 	
 	//schritt-fuer-Schritt-betrieb
 	printf("Wollen sie die Iterationen einzeln durchgehen?[y|n]:");
 	do{
 	    fgets(input, sizeof(input), stdin);
-	}while(sscanf(input, " %c", &stepbystep)!=1 || (stepbystep!='y'&& stepbystep!='n'));
+	}while(sscanf(input, " %c", &GoL.stepByStep)!=1 || (GoL.stepByStep!='y'&& GoL.stepByStep!='n'));
 	
 	
 	//Initialize Array
-	currentIteration = ErstelleSpielfeld( sizeY, sizeX, deadCellChar);
-	nextIteration = ErstelleSpielfeld( sizeY, sizeX, deadCellChar);
+	currentIteration = ErstelleSpielfeld( GoL.sizeY, GoL.sizeX, GoL.deadCellChar);
+	nextIteration = ErstelleSpielfeld( GoL.sizeY, GoL.sizeX, GoL.deadCellChar);
 	
 	
 	
 	
 	
-    Ausgabe2DArray(currentIteration, sizeX, sizeY);
-    Ausgabe2DArray(nextIteration, sizeX, sizeY);
+    Ausgabe2DArray(currentIteration, GoL.sizeX, GoL.sizeY);
+    Ausgabe2DArray(nextIteration, GoL.sizeX, GoL.sizeY);
     return 0;
 }
 
