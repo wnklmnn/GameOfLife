@@ -10,17 +10,25 @@ struct GameOfLifeSettings{
     char stepByStep;
     char zufallsStart;
 };
+struct GameOfLife{
+    unsigned int iteration;
+    struct GameOfLifeSettings settings;
+    char **currentIteration;
+    char **nextIteration;
+};
 
 void Ausgabe2DArray(char** Array, int sizeX, int sizeY);
 char** ErstelleSpielfeld( int sizeY, int sizeX, char initialValue);
 
 int main(int argc, char** argv){
     int i;
-    char input[5];
-    char **currentIteration;
-    char **nextIteration;
-    struct GameOfLifeSettings GoL;
-    GoL.deadCellChar = '0';
+    struct GameOfLife GoL;
+    GoL.settings.deadCellChar = ' ';
+    GoL.settings.aliveCellChar = 'X';
+    GoL.settings.sizeX = 20;
+    GoL.settings.sizeY = 20;
+    GoL.settings.zufallsStart = 'y';
+    GoL.settings.stepByStep = 'n';
 
     //Ausgabe der Commandline Parameter
     printf("Kommandozeilenparameter:\n");
@@ -28,8 +36,9 @@ int main(int argc, char** argv){
             printf("%i: %s\n", i, argv[i]);
     }
 
-
+    /*
     // einlesen der Einstellungen
+    char input[5];
     //Hoehe
     printf("Wie hoch soll das Spielfeld sein?: ");
 	do{
@@ -53,18 +62,18 @@ int main(int argc, char** argv){
 	do{
 	    fgets(input, sizeof(input), stdin);
 	}while(sscanf(input, " %c", &GoL.stepByStep)!=1 || (GoL.stepByStep!='y'&& GoL.stepByStep!='n'));
-	
+	*/
 	
 	//Initialize Array
-	currentIteration = ErstelleSpielfeld( GoL.sizeY, GoL.sizeX, GoL.deadCellChar);
-	nextIteration = ErstelleSpielfeld( GoL.sizeY, GoL.sizeX, GoL.deadCellChar);
+	GoL.currentIteration = ErstelleSpielfeld( GoL.settings.sizeY, GoL.settings.sizeX, GoL.settings.deadCellChar);
+	GoL.nextIteration = ErstelleSpielfeld( GoL.settings.sizeY, GoL.settings.sizeX, GoL.settings.deadCellChar);
 	
 	
 	
 	
 	
-    Ausgabe2DArray(currentIteration, GoL.sizeX, GoL.sizeY);
-    Ausgabe2DArray(nextIteration, GoL.sizeX, GoL.sizeY);
+    Ausgabe2DArray(GoL.currentIteration, GoL.settings.sizeX, GoL.settings.sizeY);
+    Ausgabe2DArray(GoL.nextIteration, GoL.settings.sizeX, GoL.settings.sizeY);
     return 0;
 }
 
