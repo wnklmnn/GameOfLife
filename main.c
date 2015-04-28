@@ -14,12 +14,21 @@ struct GameOfLifeSettings{
 void Ausgabe2DArray(char** Array, int sizeX, int sizeY);
 char** ErstelleSpielfeld( int sizeY, int sizeX, char initialValue);
 
-int main(){
+int main(int argc, char** argv){
+    int i;
     char input[5];
     char **currentIteration;
     char **nextIteration;
     struct GameOfLifeSettings GoL;
     GoL.deadCellChar = '0';
+
+    //Ausgabe der Commandline Parameter
+    printf("Kommandozeilenparameter:\n");
+    for(i=0;i<argc; i++){
+            printf("%i: %s\n", i, argv[i]);
+    }
+
+
     // einlesen der Einstellungen
     //Hoehe
     printf("Wie hoch soll das Spielfeld sein?: ");
