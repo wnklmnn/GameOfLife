@@ -1,0 +1,5 @@
+- Spiel Einstellungen in eine Strukttur auslagern.
+    AliveChar: char
+    DeadChar: char
+    isStepByStep: int(bool)
+    
