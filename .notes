@@ -2,4 +2,16 @@
     AliveChar: char
     DeadChar: char
     isStepByStep: int(bool)
-    
+    edgeBehavior: int (ausßerhalb= deadCell, Torusförmig, aliveCell)
+
+Wie die Regeln in eine Datei auslagern
+    Angabe der anzahl der Lebenden Nachbarn und aktion %i%c (Anzal:Aktion)
+    Aktionen:
+        d: zelle stirbt in nächster Iteration
+        a: zelle wird wieder belebt in nächster Iteration
+    Anzahl:
+        1:
+        2:
+        3: Nummer der Lebenden Nachbarn
+        ...
+        

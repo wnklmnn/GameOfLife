@@ -7,6 +7,7 @@ struct GameOfLifeSettings{
     int randomBeginning;
     int sizeX;
     int sizeY;
+    int edgeBehavior; //0=deadCell, 1=aliveCell, 2=Torus
     char stepByStep;
     char zufallsStart;
 };
