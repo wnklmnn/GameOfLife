@@ -90,30 +90,40 @@ void CalcIteration(struct GameOfLife GoL){
     char **tmpIteration;
     for (o=0; o<GoL.settings.sizeY; o++){
         for(i=0; i<GoL.settings.sizeX; i++){
+        printf("[%i] * [%i]\n", o, i);
         //zaehlen der Lebenden Nachbarn je nach einstellung
             if (GoL.settings.edgeBehavior==0){ // Ausßerhalb sind Tote Zellen
                 aliveNeightbors = 0;
                 //OL
-                aliveNeightbors += (GoL.currentIteration[o-1][i-1]==GoL.settings.aliveCellChar && o>0 && i > 0) ? 1 : 0;
+                printf("OL\n");
+                aliveNeightbors += ( o>0 && i > 0 && GoL.currentIteration[o-1][i-1]==GoL.settings.aliveCellChar ) ? 1 : 0;
                 //O
-                aliveNeightbors += (GoL.currentIteration[o-1][i]==GoL.settings.aliveCellChar && o>0) ? 1 : 0;
+                printf("O\n");
+                aliveNeightbors += ( o>0 && GoL.currentIteration[o-1][i]==GoL.settings.aliveCellChar ) ? 1 : 0;
                 //OR
-                aliveNeightbors += (GoL.currentIteration[o-1][i+1]==GoL.settings.aliveCellChar && o>0 && i < GoL.settings.sizeX) ? 1 : 0;
+                printf("OR\n");
+                aliveNeightbors += ( o>0 && i < GoL.settings.sizeX && GoL.currentIteration[o-1][i+1]==GoL.settings.aliveCellChar ) ? 1 : 0;
                 //L
-                aliveNeightbors += (GoL.currentIteration[o][i-1]==GoL.settings.aliveCellChar && i > 0) ? 1 : 0;
+                printf("L\n");
+                aliveNeightbors += ( i > 0 && GoL.currentIteration[o][i-1]==GoL.settings.aliveCellChar ) ? 1 : 0;
                 //R
-                aliveNeightbors += (GoL.currentIteration[o-1][i-1]==GoL.settings.aliveCellChar && i < GoL.settings.sizeX) ? 1 : 0;
+                printf("R\n");
+                aliveNeightbors += ( i < GoL.settings.sizeX-1  && GoL.currentIteration[o][i+1]==GoL.settings.aliveCellChar ) ? 1 : 0;
                 //UL
-                aliveNeightbors += (GoL.currentIteration[o+1][i-1]==GoL.settings.aliveCellChar && o<GoL.settings.sizeY && i > 0) ? 1 : 0;
+                printf("UL\n");
+                aliveNeightbors += ( o<GoL.settings.sizeY-1 && i > 0 && GoL.currentIteration[o+1][i-1]==GoL.settings.aliveCellChar ) ? 1 : 0;
                 //U
-                aliveNeightbors += (GoL.currentIteration[o+1][i]==GoL.settings.aliveCellChar && o<GoL.settings.sizeY) ? 1 : 0;
+                printf("U\n");
+                aliveNeightbors += ( o < GoL.settings.sizeY-1 && GoL.currentIteration[o+1][i]==GoL.settings.aliveCellChar ) ? 1 : 0;
                 //UR
-                aliveNeightbors += (GoL.currentIteration[o+1][i+1]==GoL.settings.aliveCellChar && o<GoL.settings.sizeY && i < GoL.settings.sizeX) ? 1 : 0;
+                printf("UR\n");
+                aliveNeightbors += ( o<GoL.settings.sizeY-1 && i < GoL.settings.sizeX && GoL.currentIteration[o+1][i+1]==GoL.settings.aliveCellChar ) ? 1 : 0;
             }else if (GoL.settings.edgeBehavior == 1){ //Ausßerhalb sind Lebende Zellen
                 
             }else if (GoL.settings.edgeBehavior == 2){ // Das spielfeld ist Kugelförmig. 
                 
             }
+            printf("Lebende Nachbarn: %i\n", aliveNeightbors);
         //Lebt oder stirbt die Zelle in der nächsten Generation?
         //Hier könnte man noch verschiedene Regeln einbauen?
             if(GoL.currentIteration[o][i] == GoL.settings.aliveCellChar && aliveNeightbors < 2){
@@ -131,6 +141,7 @@ void CalcIteration(struct GameOfLife GoL){
             
         }
     }
+    Ausgabe2DArray(GoL.nextIteration, GoL.settings.sizeX, GoL.settings.sizeY);
     tmpIteration = GoL.currentIteration;
     GoL.currentIteration = GoL.nextIteration;
     GoL.nextIteration = tmpIteration;
