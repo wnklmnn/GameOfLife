@@ -20,6 +20,7 @@ struct GameOfLife{
 
 void Ausgabe2DArray(char** Array, int sizeX, int sizeY);
 char** ErstelleSpielfeld( int sizeY, int sizeX, char initialValue);
+void CalcIteration(struct GameOfLife GoL);
 
 int main(int argc, char** argv){
     int i;
@@ -30,6 +31,7 @@ int main(int argc, char** argv){
     GoL.settings.sizeY = 20;
     GoL.settings.zufallsStart = 'y';
     GoL.settings.stepByStep = 'n';
+    GoL.settings.edgeBehavior = 0;
 
     //Ausgabe der Commandline Parameter
     printf("Kommandozeilenparameter:\n");
@@ -66,16 +68,72 @@ int main(int argc, char** argv){
 	*/
 	
 	//Initialize Array
-	GoL.currentIteration = ErstelleSpielfeld( GoL.settings.sizeY, GoL.settings.sizeX, GoL.settings.deadCellChar);
+	GoL.currentIteration = ErstelleSpielfeld( GoL.settings.sizeY, GoL.settings.sizeX, GoL.settings.aliveCellChar);
 	GoL.nextIteration = ErstelleSpielfeld( GoL.settings.sizeY, GoL.settings.sizeX, GoL.settings.deadCellChar);
 	
 	
-	
+    while(1==1){
+        CalcIteration(GoL);
+        Ausgabe2DArray(GoL.currentIteration, GoL.settings.sizeX, GoL.settings.sizeY);
+        getchar();
+    }	
 	
 	
     Ausgabe2DArray(GoL.currentIteration, GoL.settings.sizeX, GoL.settings.sizeY);
     Ausgabe2DArray(GoL.nextIteration, GoL.settings.sizeX, GoL.settings.sizeY);
     return 0;
+}
+
+void CalcIteration(struct GameOfLife GoL){
+    int o, i;
+    int aliveNeightbors;
+    char **tmpIteration;
+    for (o=0; o<GoL.settings.sizeY; o++){
+        for(i=0; i<GoL.settings.sizeX; i++){
+        //zaehlen der Lebenden Nachbarn je nach einstellung
+            if (GoL.settings.edgeBehavior==0){ // Ausßerhalb sind Tote Zellen
+                aliveNeightbors = 0;
+                //OL
+                aliveNeightbors += (GoL.currentIteration[o-1][i-1]==GoL.settings.aliveCellChar && o>0 && i > 0) ? 1 : 0;
+                //O
+                aliveNeightbors += (GoL.currentIteration[o-1][i]==GoL.settings.aliveCellChar && o>0) ? 1 : 0;
+                //OR
+                aliveNeightbors += (GoL.currentIteration[o-1][i+1]==GoL.settings.aliveCellChar && o>0 && i < GoL.settings.sizeX) ? 1 : 0;
+                //L
+                aliveNeightbors += (GoL.currentIteration[o][i-1]==GoL.settings.aliveCellChar && i > 0) ? 1 : 0;
+                //R
+                aliveNeightbors += (GoL.currentIteration[o-1][i-1]==GoL.settings.aliveCellChar && i < GoL.settings.sizeX) ? 1 : 0;
+                //UL
+                aliveNeightbors += (GoL.currentIteration[o+1][i-1]==GoL.settings.aliveCellChar && o<GoL.settings.sizeY && i > 0) ? 1 : 0;
+                //U
+                aliveNeightbors += (GoL.currentIteration[o+1][i]==GoL.settings.aliveCellChar && o<GoL.settings.sizeY) ? 1 : 0;
+                //UR
+                aliveNeightbors += (GoL.currentIteration[o+1][i+1]==GoL.settings.aliveCellChar && o<GoL.settings.sizeY && i < GoL.settings.sizeX) ? 1 : 0;
+            }else if (GoL.settings.edgeBehavior == 1){ //Ausßerhalb sind Lebende Zellen
+                
+            }else if (GoL.settings.edgeBehavior == 2){ // Das spielfeld ist Kugelförmig. 
+                
+            }
+        //Lebt oder stirbt die Zelle in der nächsten Generation?
+        //Hier könnte man noch verschiedene Regeln einbauen?
+            if(GoL.currentIteration[o][i] == GoL.settings.aliveCellChar && aliveNeightbors < 2){
+                GoL.nextIteration[o][i] = GoL.settings.deadCellChar;
+            }
+            if (GoL.currentIteration[o][i] == GoL.settings.deadCellChar && aliveNeightbors == 3){
+                GoL.nextIteration[o][i] = GoL.settings.aliveCellChar;
+            }
+            if (GoL.currentIteration[o][i] == GoL.settings.aliveCellChar && (aliveNeightbors == 2 || aliveNeightbors == 3)){
+                GoL.nextIteration[o][i] = GoL.settings.aliveCellChar;
+            }
+            if(GoL.currentIteration[o][i] == GoL.settings.aliveCellChar && aliveNeightbors > 3){
+                GoL.nextIteration[o][i] = GoL.settings.deadCellChar;
+            }
+            
+        }
+    }
+    tmpIteration = GoL.currentIteration;
+    GoL.currentIteration = GoL.nextIteration;
+    GoL.nextIteration = tmpIteration;
 }
 
 void Ausgabe2DArray(char** Array, int sizeX, int sizeY){
