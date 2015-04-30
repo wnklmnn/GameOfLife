@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<time.h>
 
 struct GameOfLifeSettings{
     char deadCellChar;
@@ -18,12 +19,13 @@ struct GameOfLife{
     char **nextIteration;
 };
 
-void Ausgabe2DArray(char** Array, int sizeX, int sizeY);
-char** ErstelleSpielfeld( int sizeY, int sizeX, char initialValue);
+void AusgabeSpielfeld(struct GameOfLife GoL);
+void ErstelleSpielfeld( struct GameOfLife *GoL);
 void CalcIteration(struct GameOfLife *GoL);
 
 int main(int argc, char** argv){
     int i;
+    srand(time(NULL));
     struct GameOfLife GoL;
     GoL.settings.deadCellChar = ' ';
     GoL.settings.aliveCellChar = 'X';
@@ -32,6 +34,7 @@ int main(int argc, char** argv){
     GoL.settings.zufallsStart = 'y';
     GoL.settings.stepByStep = 'n';
     GoL.settings.edgeBehavior = 0;
+    GoL.iteration = 0;
 
     //Ausgabe der Commandline Parameter
     printf("Kommandozeilenparameter:\n");
@@ -68,19 +71,14 @@ int main(int argc, char** argv){
 	*/
 	
 	//Initialize Array
-	GoL.currentIteration = ErstelleSpielfeld( GoL.settings.sizeY, GoL.settings.sizeX, GoL.settings.aliveCellChar);
-	GoL.nextIteration = ErstelleSpielfeld( GoL.settings.sizeY, GoL.settings.sizeX, GoL.settings.deadCellChar);
+    ErstelleSpielfeld( &GoL);
 	
 	
     while(1==1){
         CalcIteration(&GoL);
-        //Ausgabe2DArray(GoL.currentIteration, GoL.settings.sizeX, GoL.settings.sizeY);
+        AusgabeSpielfeld(GoL);
         getchar();
     }	
-	
-	
-    Ausgabe2DArray(GoL.currentIteration, GoL.settings.sizeX, GoL.settings.sizeY);
-    Ausgabe2DArray(GoL.nextIteration, GoL.settings.sizeX, GoL.settings.sizeY);
     return 0;
 }
 
@@ -135,32 +133,36 @@ void CalcIteration(struct GameOfLife *GoL){
     tmpIteration = GoL->currentIteration;
     GoL->currentIteration = GoL->nextIteration;
     GoL->nextIteration = tmpIteration;
-    Ausgabe2DArray(GoL->currentIteration, GoL->settings.sizeX, GoL->settings.sizeY);
+    GoL->iteration += 1;
 }
 
-void Ausgabe2DArray(char** Array, int sizeX, int sizeY){
+void AusgabeSpielfeld(struct GameOfLife GoL){
     int o, i;
-    printf("Ausgabe Array %i*%i\n", sizeY, sizeX);
-	for (o=0; o< sizeY;o++){
-	    for(i=0;i<sizeX;i++){
-	        printf("%c ", Array[o][i]);
+    printf("Ausgabe Iteration: %i %i*%i\n",GoL.iteration, GoL.settings.sizeY, GoL.settings.sizeX);
+	for (o=0; o< GoL.settings.sizeY;o++){
+	    for(i=0;i<GoL.settings.sizeX;i++){
+	        printf("%c", GoL.currentIteration[o][i]);
 	    }
 	    printf("\n");
     }
 }
 
-char** ErstelleSpielfeld( int sizeY, int sizeX, char initialValue){
+void ErstelleSpielfeld( struct GameOfLife *GoL){
     int i, o;
-    char **feld;
-    feld = malloc(sizeY * sizeof(char*));
-	for(i=0;i<sizeY;i++){
-	    feld[i] = malloc(sizeX * sizeof(char));
+    GoL->currentIteration = malloc(GoL->settings.sizeY * sizeof(char*));
+	for(i=0;i<GoL->settings.sizeY;i++){
+        GoL->currentIteration[i] = malloc(GoL->settings.sizeX * sizeof(char));
 	}
-	for (o=0; o< sizeY;o++){
-	    for(i=0;i<sizeX;i++){
-	        feld[o][i] = initialValue;
+	
+	GoL->nextIteration = malloc(GoL->settings.sizeY * sizeof(char*));
+	for(i=0;i<GoL->settings.sizeY;i++){
+        GoL->nextIteration[i] = malloc(GoL->settings.sizeX * sizeof(char));
+	}
+	
+	for(o=0;o<GoL->settings.sizeY;o++){
+	    for(i=0;i<GoL->settings.sizeX;i++){
+	        GoL->currentIteration[o][i] = rand()%2 ? GoL->settings.aliveCellChar : GoL->settings.deadCellChar;
 	    }
-	    
-    }
-	return feld;
+	}
+	
 }
