@@ -4,18 +4,18 @@
 #include "util.h"
 #include "config.h"
 
-int readStartArguments(int argc, char** argv, struct GameOfLife *GoL)
-{
+int readStartArguments(int argc, char** argv, struct GameOfLife *GoL){
+	
 	int i;
 	// Default Settings
-    GoL.settings.deadCellChar = ' ';
-    GoL.settings.aliveCellChar = 'X';
-    GoL.settings.sizeX = 20;
-    GoL.settings.sizeY = 20;
-    GoL.settings.zufallsStart = 'y';
-    GoL.settings.stepByStep = 'n';
-    GoL.settings.edgeBehavior = 0;
-    GoL.iteration = 0;
+    GoL->settings.deadCellChar = ' ';
+    GoL->settings.aliveCellChar = 'X';
+    GoL->settings.sizeX = 20;
+    GoL->settings.sizeY = 20;
+    GoL->settings.zufallsStart = 'y';
+    GoL->settings.stepByStep = 'n';
+    GoL->settings.edgeBehavior = 0;
+    GoL->iteration = 0;
 
     /* Argument Parsing */
     for(i=1;i<argc; i++){
@@ -24,11 +24,11 @@ int readStartArguments(int argc, char** argv, struct GameOfLife *GoL)
             printf("GameOfLife v%s", VERSION);
             return 1;
         } else if(strcmp(argv[i], "-random") == 0) {
-            GoL.settings.zufallsStart = 'y';
-            GoL.settings.stepByStep = 'n';
+            GoL->settings.zufallsStart = 'y';
+            GoL->settings.stepByStep = 'n';
         } else if(strcmp(argv[i], "-step") == 0) {
-            GoL.settings.zufallsStart = 'n';
-            GoL.settings.stepByStep = 'y';
+            GoL->settings.zufallsStart = 'n';
+            GoL->settings.stepByStep = 'y';
         } else if(strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "-help") == 0) {
             printf("Usage: GameOfLife \n");
             printf("-v\t\tShows the programm version\n");
@@ -39,20 +39,20 @@ int readStartArguments(int argc, char** argv, struct GameOfLife *GoL)
             printf("-y\t\tDefines the height of the field\n");
             printf("-step\t\tRun the game by pressing the enter key\n");
 
-            return 0;
+            return 1;
         } else {
             /* Arguments with value */
             char *argName = strtok(argv[i], "=");
             if(argName != NULL) {
                 char *argValue = strtok(NULL, "=");
                 if(strcmp(argName, "-ac") == 0) {
-                    GoL.settings.deadCellChar = argValue;
+                    GoL->settings.deadCellChar = *argValue;
                 } else if(strcmp(argName, "-dc") == 0) {
-                    GoL.settings.deadCellChar = argValue;
+                    GoL->settings.deadCellChar = *argValue;
                 } else if(strcmp(argName, "-x") == 0) {
-                    GoL.settings.sizeX = atoi(argValue);
+                    GoL->settings.sizeX = atoi(argValue);
                 } else if(strcmp(argName, "-y") == 0) {
-                    GoL.settings.sizeY = atoi(argValue);
+                    GoL->settings.sizeY = atoi(argValue);
                 }
             }
         }
