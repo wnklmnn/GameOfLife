@@ -1,9 +1,11 @@
 
 GCC= gcc -Wall -Werror -g
 
-GameOfLife: main.o
-	$(GCC) main.o -o GameOfLife
+linux:
+	$(GCC) main.c -o GameOfLife
 
-main.o: main.c
-	$(GCC) -c main.c
+windows:
+	$(GCC) main.c -o GameOfLife
 
+clean:
+	rm GameOfLife*
