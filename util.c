@@ -4,8 +4,8 @@
 #include "util.h"
 #include "config.h"
 
-int readStartArguments(int argc, char** argv, struct GameOfLife *GoL){
-	
+int readStartArguments(int argc, char** argv, GameOfLife *GoL){
+
 	int i;
 	// Default Settings
     GoL->settings.deadCellChar = ' ';
