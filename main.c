@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <unistd.h>
 #include "util.h"
 
 #ifdef WIN32
@@ -42,6 +43,7 @@ int main(int argc, char** argv){
         CalcIteration(&GoL);
         AusgabeSpielfeld(GoL, subWin);
         updateHeadWin(headWin, GoL);
+        usleep(50000);
     }
     return 0;
 }
@@ -157,7 +159,7 @@ void initStartScreen() {
 
 void updateHeadWin(WINDOW *headWin, GameOfLife GoL) {
     if(GoL.iteration == 0) {
-        waddstr(headWin, "Game of Life v 0.1");
+        waddstr(headWin, "Game of Life v 0.01");
     }
 
     char interationString[255];
