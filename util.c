@@ -21,7 +21,7 @@ int readStartArguments(int argc, char** argv, struct GameOfLife *GoL){
     for(i=1;i<argc; i++){
         /* Arguments without value */
         if(strcmp(argv[i], "-v") == 0) {
-            printf("GameOfLife v%s", VERSION);
+            printf("GameOfLife v%s\n", VERSION);
             return 1;
         } else if(strcmp(argv[i], "-random") == 0) {
             GoL->settings.zufallsStart = 'y';
