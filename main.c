@@ -4,24 +4,18 @@
 #include <string.h>
 #include <unistd.h>
 #include "util.h"
+#include "drawing.h"
 
 #ifdef WIN32
 #include "vendor/pdcurses/curses.h"
-#include <windows.h>
 #else
 #include <curses.h>
 #endif
 
-void AusgabeSpielfeld(GameOfLife GoL, WINDOW* subWin);
 void ErstelleSpielfeld(GameOfLife *GoL);
 void CalcIteration(GameOfLife *GoL);
-void initStartScreen();
-void updateHeadWin(WINDOW *headWin, GameOfLife GoL);
 
 int main(int argc, char** argv){
-    #ifdef WIN32
-        SetConsoleTitle(TEXT("Game of Life"));
-    #endif
     srand(time(NULL));
     GameOfLife GoL;
 
@@ -31,8 +25,7 @@ int main(int argc, char** argv){
 
     initStartScreen();
     WINDOW *headWin = subwin(stdscr, 1, COLS, 0, 0);
-    WINDOW *subWin = subwin ( stdscr, LINES - 1, COLS, 1, 0 );
-    wbkgd(headWin, COLOR_PAIR(1));
+    WINDOW *subWin = subwin(stdscr, LINES - 1, COLS, 1, 0);
 
     updateHeadWin(headWin, GoL);
 
@@ -102,17 +95,6 @@ void CalcIteration(GameOfLife *GoL){
     GoL->iteration += 1;
 }
 
-void AusgabeSpielfeld(GameOfLife GoL, WINDOW* subWin){
-    int o, i;
-	for (o=0; o< GoL.settings.sizeY;o++){
-	    for(i=0;i<GoL.settings.sizeX;i++){
-            mvwaddch(subWin, o, i, GoL.currentIteration[o][i]);
-	    }
-    }
-
-    wrefresh(subWin);
-}
-
 void ErstelleSpielfeld(GameOfLife *GoL){
     int i, o;
     GoL->currentIteration = malloc(GoL->settings.sizeY * sizeof(char*));
@@ -130,40 +112,4 @@ void ErstelleSpielfeld(GameOfLife *GoL){
 	        GoL->currentIteration[o][i] = rand()%2 ? GoL->settings.aliveCellChar : GoL->settings.deadCellChar;
 	    }
 	}
-}
-
-void initStartScreen() {
-    initscr();
-    nodelay(stdscr, TRUE);
-    noecho();
-
-    /* Hide Cursor */
-    curs_set(0);
-
-    /* Disable Scrolling in Console */
-    scrollok (stdscr, TRUE);
-
-    /* Add the Colors to the Console */
-    start_color();
-
-    init_pair(1, COLOR_BLACK, COLOR_WHITE);
-    init_pair(2, COLOR_BLACK, COLOR_GREEN);
-    init_pair(3, COLOR_WHITE, COLOR_WHITE);
-    init_pair(4, COLOR_RED, COLOR_WHITE);
-    init_pair(5, COLOR_GREEN, COLOR_WHITE);
-    init_pair(6, COLOR_BLUE, COLOR_WHITE);
-
-    /* At first clear the Console */
-    clear();
-}
-
-void updateHeadWin(WINDOW *headWin, GameOfLife GoL) {
-    if(GoL.iteration == 0) {
-        waddstr(headWin, "Game of Life v 0.01");
-    }
-
-    char interationString[255];
-    sprintf(interationString, "%s:%i", "Interation", GoL.iteration);
-    mvwaddstr(headWin, 0, COLS - strlen(interationString) -1, interationString);
-    wrefresh(headWin);
 }
