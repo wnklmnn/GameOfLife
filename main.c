@@ -3,12 +3,14 @@
 #include <time.h>
 #include <string.h>
 #include "util.h"
+#include <curses.h>
 
 void AusgabeSpielfeld(struct GameOfLife GoL);
 void ErstelleSpielfeld(struct GameOfLife *GoL);
 void CalcIteration(struct GameOfLife *GoL);
 
 int main(int argc, char** argv){
+    initscr();
     srand(time(NULL));
     struct GameOfLife GoL;
 
@@ -25,6 +27,7 @@ int main(int argc, char** argv){
         AusgabeSpielfeld(GoL);
         getchar();
     }	
+    
     return 0;
 }
 
@@ -84,13 +87,14 @@ void CalcIteration(struct GameOfLife *GoL){
 
 void AusgabeSpielfeld(struct GameOfLife GoL){
     int o, i;
-    printf("Ausgabe Iteration: %i %i*%i\n",GoL.iteration, GoL.settings.sizeY, GoL.settings.sizeX);
+    mvprintw(0, 0,"Ausgabe Iteration: %i %i*%i\n",GoL.iteration, GoL.settings.sizeY, GoL.settings.sizeX);
 	for (o=0; o< GoL.settings.sizeY;o++){
 	    for(i=0;i<GoL.settings.sizeX;i++){
-	        printf("%c", GoL.currentIteration[o][i]);
+	        mvprintw(o+1, i,"%c", GoL.currentIteration[o][i]);
 	    }
-	    printf("\n");
+	    printw("\n");
     }
+    refresh();
 }
 
 void ErstelleSpielfeld(struct GameOfLife *GoL){
