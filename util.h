@@ -1,5 +1,5 @@
 /* Structs */
-struct GameOfLifeSettings{
+typedef struct{
     char deadCellChar;
     char aliveCellChar;
     int randomBeginning;
@@ -8,11 +8,11 @@ struct GameOfLifeSettings{
     int edgeBehavior; //0=deadCell, 1=aliveCell, 2=Torus
     char stepByStep;
     char zufallsStart;
-};
-struct GameOfLife{
+} GameOfLifeSettings;
+typedef struct {
     unsigned int iteration;
-    struct GameOfLifeSettings settings;
+    GameOfLifeSettings settings;
     char **currentIteration;
     char **nextIteration;
-}; 
-int readStartArguments(int argc, char** argv, struct GameOfLife *GoL);
+} GameOfLife;
+int readStartArguments(int argc, char** argv, GameOfLife *GoL);

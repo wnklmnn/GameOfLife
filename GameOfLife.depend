@@ -1,0 +1,33 @@
+# depslib dependency file v1.0
+1430678430 source:d:\projects\gameoflife\drawing.c
+	"vendor/pdcurses/curses.h"
+	<windows.h>
+	<curses.h>
+
+1216145605 d:\projects\gameoflife\vendor\pdcurses\curses.h
+	<stdarg.h>
+	<stddef.h>
+	<stdio.h>
+	<wchar.h>
+
+1430773502 source:d:\projects\gameoflife\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<string.h>
+	"util.h"
+	"vendor/pdcurses/curses.h"
+	<windows.h>
+	<curses.h>
+
+1430575172 d:\projects\gameoflife\util.h
+
+1430769931 source:d:\projects\gameoflife\util.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	"util.h"
+	"config.h"
+
+1430571942 d:\projects\gameoflife\config.h
+
