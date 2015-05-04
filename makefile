@@ -5,7 +5,7 @@ linux:
 	$(GCC) $(FILES) -o GameOfLife -lncurses
 
 windows:
-	$(GCC) $(FILES) -o GameOfLife
+	$(GCC) $(FILES) -L "vendor/pdcurses" -lpdcurses -o GameOfLife
 
 clean:
 	rm GameOfLife*

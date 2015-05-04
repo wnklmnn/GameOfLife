@@ -2,35 +2,55 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <unistd.h>
 #include "util.h"
 #include <curses.h>
 
-void AusgabeSpielfeld(struct GameOfLife GoL);
-void ErstelleSpielfeld(struct GameOfLife *GoL);
-void CalcIteration(struct GameOfLife *GoL);
+#ifdef WIN32
+#include "vendor/pdcurses/curses.h"
+#include <windows.h>
+#else
+#include <curses.h>
+#endif
+
+void AusgabeSpielfeld(GameOfLife GoL, WINDOW* subWin);
+void ErstelleSpielfeld(GameOfLife *GoL);
+void CalcIteration(GameOfLife *GoL);
+void initStartScreen();
+void updateHeadWin(WINDOW *headWin, GameOfLife GoL);
 
 int main(int argc, char** argv){
-    initscr();
+    #ifdef WIN32
+        SetConsoleTitle(TEXT("Game of Life"));
+    #endif
     srand(time(NULL));
-    struct GameOfLife GoL;
+    GameOfLife GoL;
 
     if(readStartArguments(argc, argv, &GoL) == 1) {
         return 0;
     }
 
+    initStartScreen();
+    WINDOW *headWin = subwin(stdscr, 1, COLS, 0, 0);
+    WINDOW *subWin = subwin ( stdscr, LINES - 1, COLS, 1, 0 );
+    wbkgd(headWin, COLOR_PAIR(1));
+
+    updateHeadWin(headWin, GoL);
+
 	//Initialize Array
     ErstelleSpielfeld(&GoL);
-	
-	
-    while(1==1){
+
+    while(1){
         CalcIteration(&GoL);
-        AusgabeSpielfeld(GoL);
-    }	
+        AusgabeSpielfeld(GoL, subWin);
+        updateHeadWin(headWin, GoL);
+        usleep(50000);
+    }
     
     return 0;
 }
 
-void CalcIteration(struct GameOfLife *GoL){
+void CalcIteration(GameOfLife *GoL){
     int o, i;
     int aliveNeightbors;
     char **tmpIteration;
@@ -57,9 +77,9 @@ void CalcIteration(struct GameOfLife *GoL){
                 //UR
                 aliveNeightbors += ( o<GoL->settings.sizeY-1 && i < GoL->settings.sizeX && GoL->currentIteration[o+1][i+1]==GoL->settings.aliveCellChar ) ? 1 : 0;
             }else if (GoL->settings.edgeBehavior == 1){ //Ausßerhalb sind Lebende Zellen
-                
-            }else if (GoL->settings.edgeBehavior == 2){ // Das spielfeld ist Kugelförmig. 
-                
+
+            }else if (GoL->settings.edgeBehavior == 2){ // Das spielfeld ist Kugelförmig.
+
             }
         //Lebt oder stirbt die Zelle in der nächsten Generation?
         //Hier könnte man noch verschiedene Regeln einbauen?
@@ -75,7 +95,7 @@ void CalcIteration(struct GameOfLife *GoL){
             if(GoL->currentIteration[o][i] == GoL->settings.aliveCellChar && aliveNeightbors > 3){
                 GoL->nextIteration[o][i] = GoL->settings.deadCellChar;
             }
-            
+
         }
     }
     tmpIteration = GoL->currentIteration;
@@ -84,33 +104,68 @@ void CalcIteration(struct GameOfLife *GoL){
     GoL->iteration += 1;
 }
 
-void AusgabeSpielfeld(struct GameOfLife GoL){
+void AusgabeSpielfeld(GameOfLife GoL, WINDOW* subWin){
     int o, i;
-    mvprintw(0, 0,"Ausgabe Iteration: %i %i*%i\n",GoL.iteration, GoL.settings.sizeY, GoL.settings.sizeX);
 	for (o=0; o< GoL.settings.sizeY;o++){
 	    for(i=0;i<GoL.settings.sizeX;i++){
-	        mvprintw(o+1, i,"%c", GoL.currentIteration[o][i]);
+            mvwaddch(subWin, o, i, GoL.currentIteration[o][i]);
 	    }
-
     }
-    refresh();
+
+    wrefresh(subWin);
 }
 
-void ErstelleSpielfeld(struct GameOfLife *GoL){
+void ErstelleSpielfeld(GameOfLife *GoL){
     int i, o;
     GoL->currentIteration = malloc(GoL->settings.sizeY * sizeof(char*));
 	for(i=0;i<GoL->settings.sizeY;i++){
         GoL->currentIteration[i] = malloc(GoL->settings.sizeX * sizeof(char));
 	}
-	
+
 	GoL->nextIteration = malloc(GoL->settings.sizeY * sizeof(char*));
 	for(i=0;i<GoL->settings.sizeY;i++){
         GoL->nextIteration[i] = malloc(GoL->settings.sizeX * sizeof(char));
 	}
-	
+
 	for(o=0;o<GoL->settings.sizeY;o++){
 	    for(i=0;i<GoL->settings.sizeX;i++){
 	        GoL->currentIteration[o][i] = rand()%2 ? GoL->settings.aliveCellChar : GoL->settings.deadCellChar;
 	    }
-	}	
+	}
+}
+
+void initStartScreen() {
+    initscr();
+    nodelay(stdscr, TRUE);
+    noecho();
+
+    /* Hide Cursor */
+    curs_set(0);
+
+    /* Disable Scrolling in Console */
+    scrollok (stdscr, TRUE);
+
+    /* Add the Colors to the Console */
+    start_color();
+
+    init_pair(1, COLOR_BLACK, COLOR_WHITE);
+    init_pair(2, COLOR_BLACK, COLOR_GREEN);
+    init_pair(3, COLOR_WHITE, COLOR_WHITE);
+    init_pair(4, COLOR_RED, COLOR_WHITE);
+    init_pair(5, COLOR_GREEN, COLOR_WHITE);
+    init_pair(6, COLOR_BLUE, COLOR_WHITE);
+
+    /* At first clear the Console */
+    clear();
+}
+
+void updateHeadWin(WINDOW *headWin, GameOfLife GoL) {
+    if(GoL.iteration == 0) {
+        waddstr(headWin, "Game of Life v 0.01");
+    }
+
+    char interationString[255];
+    sprintf(interationString, "%s:%i", "Interation", GoL.iteration);
+    mvwaddstr(headWin, 0, COLS - strlen(interationString) -1, interationString);
+    wrefresh(headWin);
 }
