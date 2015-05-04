@@ -46,7 +46,7 @@ int readStartArguments(int argc, char** argv, struct GameOfLife *GoL){
             if(argName != NULL) {
                 char *argValue = strtok(NULL, "=");
                 if(strcmp(argName, "-ac") == 0) {
-                    GoL->settings.deadCellChar = *argValue;
+                    GoL->settings.aliveCellChar = *argValue;
                 } else if(strcmp(argName, "-dc") == 0) {
                     GoL->settings.deadCellChar = *argValue;
                 } else if(strcmp(argName, "-x") == 0) {
