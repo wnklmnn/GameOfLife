@@ -25,7 +25,6 @@ int main(int argc, char** argv){
     while(1==1){
         CalcIteration(&GoL);
         AusgabeSpielfeld(GoL);
-        getchar();
     }	
     
     return 0;
@@ -92,7 +91,7 @@ void AusgabeSpielfeld(struct GameOfLife GoL){
 	    for(i=0;i<GoL.settings.sizeX;i++){
 	        mvprintw(o+1, i,"%c", GoL.currentIteration[o][i]);
 	    }
-	    printw("\n");
+
     }
     refresh();
 }
