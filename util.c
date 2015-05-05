@@ -66,3 +66,17 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
 
     return 0;
 }
+
+void exportSpielFeld(GameOfLife *GoL) {
+    FILE *f = fopen("export.txt", "w");
+    int i, o;
+    for(o=0;o<GoL->settings.sizeY;o++){
+	    for(i=0;i<GoL->settings.sizeX;i++){
+            fprintf(f, "%i;", (GoL->currentIteration[o][i] == GoL->settings.aliveCellChar) ? 1 : 0);
+	    }
+	    if(o != GoL->settings.sizeY - 1) {
+            fprintf(f, "\n");
+	    }
+	}
+	fclose(f);
+}
