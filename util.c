@@ -14,7 +14,7 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
     GoL->settings.sizeY = 20;
     GoL->settings.zufallsStart = 'y';
     GoL->settings.stepByStep = 'n';
-    GoL->settings.edgeBehavior = 0;
+    GoL->settings.edgeBehavior = 2;
     GoL->iteration = 0;
 
     /* Argument Parsing */

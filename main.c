@@ -79,7 +79,23 @@ void CalcIteration(GameOfLife *GoL){
             }else if (GoL->settings.edgeBehavior == 1){ //Ausßerhalb sind Lebende Zellen
 
             }else if (GoL->settings.edgeBehavior == 2){ // Das spielfeld ist Kugelförmig.
-
+                aliveNeightbors = 0;
+                //OL
+                aliveNeightbors += ( GoL->currentIteration[((o-1) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY][((i-1) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX]==GoL->settings.aliveCellChar ) ? 1 : 0;
+                //O
+                aliveNeightbors += ( GoL->currentIteration[((o-1) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY][((i) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX]==GoL->settings.aliveCellChar ) ? 1 : 0;
+                //OR
+                aliveNeightbors += ( GoL->currentIteration[((o-1) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY][((i+1) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX]==GoL->settings.aliveCellChar ) ? 1 : 0;
+                //L
+                aliveNeightbors += ( GoL->currentIteration[((o) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY][((i-1) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX]==GoL->settings.aliveCellChar ) ? 1 : 0;
+                //R
+                aliveNeightbors += ( GoL->currentIteration[((o) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY][((i+1) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX]==GoL->settings.aliveCellChar ) ? 1 : 0;
+                //UL
+                aliveNeightbors += ( GoL->currentIteration[((o+1) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY][((i-1) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX]==GoL->settings.aliveCellChar ) ? 1 : 0;
+                //U
+                aliveNeightbors += ( GoL->currentIteration[((o+1) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY][((i) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX]==GoL->settings.aliveCellChar ) ? 1 : 0;
+                //UR
+                aliveNeightbors += ( GoL->currentIteration[((o+1) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY] [((i+1) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX]==GoL->settings.aliveCellChar ) ? 1 : 0;
             }
         //Lebt oder stirbt die Zelle in der nächsten Generation?
         //Hier könnte man noch verschiedene Regeln einbauen?
