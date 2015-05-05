@@ -14,7 +14,7 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
     GoL->settings.sizeY = 20;
     GoL->settings.zufallsStart = 'y';
     GoL->settings.stepByStep = 'n';
-    GoL->settings.edgeBehavior = 2;
+    GoL->settings.edgeBehavior = 0;
     GoL->iteration = 0;
 
     /* Argument Parsing */
@@ -38,6 +38,7 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
             printf("-x\t\tDefines the width of the field\n");
             printf("-y\t\tDefines the height of the field\n");
             printf("-step\t\tRun the game by pressing the enter key\n");
+            printf("-eb\t\tChange the behavior how the Edge of the Array is handeld\n");
 
             return 1;
         } else {
@@ -53,6 +54,11 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
                     GoL->settings.sizeX = atoi(argValue);
                 } else if(strcmp(argName, "-y") == 0) {
                     GoL->settings.sizeY = atoi(argValue);
+                } else if(strcmp(argName, "-eb") == 0) {
+                    GoL->settings.edgeBehavior = atoi(argValue);
+                    if (GoL->settings.edgeBehavior<0 || GoL->settings.edgeBehavior>2){
+                        GoL->settings.edgeBehavior = 0;
+                    }
                 }
             }
         }
