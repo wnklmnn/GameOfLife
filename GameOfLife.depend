@@ -13,20 +13,20 @@
 	<stdio.h>
 	<wchar.h>
 
-1430776336 source:d:\projects\gameoflife\main.c
+1430865268 source:d:\projects\gameoflife\main.c
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
-	<string.h>
-	<unistd.h>
 	"util.h"
 	"drawing.h"
+	"gol.h"
 	"vendor/pdcurses/curses.h"
 	<curses.h>
 
-1430775919 d:\projects\gameoflife\util.h
+1430865244 d:\projects\gameoflife\util.h
+	"gol.h"
 
-1430775919 source:d:\projects\gameoflife\util.c
+1430849031 source:d:\projects\gameoflife\util.c
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -39,4 +39,13 @@
 	"vendor/pdcurses/curses.h"
 	<windows.h>
 	<curses.h>
+
+1430865228 d:\projects\gameoflife\gol.h
+
+1430865314 source:d:\projects\gameoflife\gol.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<unistd.h>
+	"gol.h"
 

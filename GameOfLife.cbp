@@ -36,6 +36,10 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="config.h" />
+		<Unit filename="drawing.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="drawing.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

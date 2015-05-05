@@ -1,5 +1,5 @@
 GCC= gcc -Wall -Werror -g
-FILES = util.c main.c drawing.c
+FILES = util.c main.c drawing.c gol.c
 
 linux:
 	$(GCC) $(FILES) -o GameOfLife -lncurses
