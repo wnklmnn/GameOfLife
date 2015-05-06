@@ -34,7 +34,11 @@ int main(int argc, char** argv){
         CalcIteration(&GoL);
         AusgabeSpielfeld(GoL, subWin);
         updateHeadWin(headWin, GoL);
-        usleep(50000);
+        if (GoL.settings.stepByStep =='y'){
+            getchar();
+        }else {
+            usleep(50000);
+        }
     }
 
     return 0;
