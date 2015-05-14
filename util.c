@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "util.h"
 #include "config.h"
 
@@ -15,6 +16,7 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
     GoL->settings.zufallsStart = 'y';
     GoL->settings.stepByStep = 'n';
     GoL->settings.edgeBehavior = 0;
+    GoL->settings.importField = 0;
     GoL->iteration = 0;
 
     /* Argument Parsing */
@@ -29,6 +31,8 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
         } else if(strcmp(argv[i], "-step") == 0) {
             GoL->settings.zufallsStart = 'n';
             GoL->settings.stepByStep = 'y';
+        } else if(strcmp(argv[i], "-import") == 0) {
+            GoL->settings.importField = 1;
         } else if(strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "-help") == 0) {
             printf("Usage: GameOfLife \n");
             printf("-v\t\tShows the programm version\n");
@@ -39,6 +43,7 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
             printf("-y\t\tDefines the height of the field\n");
             printf("-step\t\tRun the game by pressing the enter key\n");
             printf("-eb\t\tChange the behavior how the Edge of the Array is handeld\n");
+            printf("-import\t\tLocate the import file\n");
 
             return 1;
         } else {
@@ -70,6 +75,7 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
 void exportSpielFeld(GameOfLife *GoL) {
     FILE *f = fopen("export.txt", "w");
     int i, o;
+    fprintf(f, "%i;%i\n", GoL->settings.sizeX, GoL->settings.sizeY);
     for(o=0;o<GoL->settings.sizeY;o++){
 	    for(i=0;i<GoL->settings.sizeX;i++){
             fprintf(f, "%i;", (GoL->currentIteration[o][i] == GoL->settings.aliveCellChar) ? 1 : 0);
@@ -79,4 +85,58 @@ void exportSpielFeld(GameOfLife *GoL) {
 	    }
 	}
 	fclose(f);
+}
+
+int importSpielFeld(GameOfLife *GoL) {
+    int i;
+    if(access("export.txt", F_OK) != -1) {
+        FILE *f = fopen("export.txt", "rb");
+        fseek(f, 0, SEEK_END);
+        long fsize = ftell(f);
+        fseek(f, 0, SEEK_SET);
+        char *string = malloc(fsize + 1);
+        fread(string, fsize, 1, f);
+        fclose(f);
+
+        char *line = strtok(string, ";");
+        int xSize = atoi(line);
+        int ySize = 0;
+
+        line = strtok(NULL, "\n");
+        ySize = atoi(line);
+
+        GoL->currentIteration = malloc(ySize * sizeof(char*));
+        for(i=0;i<ySize;i++){
+            GoL->currentIteration[i] = malloc(xSize * sizeof(char));
+        }
+
+        GoL->nextIteration = malloc(ySize * sizeof(char*));
+        for(i=0;i<ySize;i++){
+            GoL->nextIteration[i] = malloc(xSize * sizeof(char));
+        }
+
+        int currentX = 0;
+        int currentY = 0;
+        line = strtok(NULL, "\n");
+
+        while(line != NULL) {
+            printf("Row: %s\n", line);
+
+            char *column = strtok(NULL, ";");
+
+            for(currentX=0;i<xSize;currentX++){
+                printf("X: %i, Y: %i => %i\n", currentX, currentY, atoi(column));
+
+                column = strtok(NULL, ";");
+            }
+
+            line = strtok(NULL, "\n");
+            currentY++;
+        }
+
+        return 0;
+
+    } else {
+        return -1;
+    }
 }

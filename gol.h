@@ -10,6 +10,7 @@ typedef struct{
     int edgeBehavior; //0=deadCell, 1=aliveCell, 2=Torus
     char stepByStep;
     char zufallsStart;
+    int importField;
 } GameOfLifeSettings;
 typedef struct {
     unsigned int iteration;

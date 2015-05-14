@@ -27,8 +27,18 @@ int main(int argc, char** argv){
 
     updateHeadWin(headWin, GoL);
 
-	//Initialize Array
-    ErstelleSpielfeld(&GoL);
+    if(GoL.settings.importField == 1) {
+        if(importSpielFeld(&GoL) == -1) {
+            waddstr(subWin, "Import fehlgeschlagen.\nTippe eine beliebige Taste um zufälliges Spielfeld zu erstellen.\n");
+            wrefresh(subWin);
+            getchar();
+            wclear(subWin);
+            wrefresh(subWin);
+            ErstelleSpielfeld(&GoL);
+        }
+    } else {
+        ErstelleSpielfeld(&GoL);
+    }
 
     while(1){
         CalcIteration(&GoL);
