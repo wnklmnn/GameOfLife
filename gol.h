@@ -17,6 +17,8 @@ typedef struct {
     GameOfLifeSettings settings;
     char **currentIteration;
     char **nextIteration;
+    unsigned int lastTimestamp;
+    unsigned int interationPerSecond;
 } GameOfLife;
 
 

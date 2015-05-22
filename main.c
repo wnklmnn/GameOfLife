@@ -16,6 +16,7 @@
 int main(int argc, char** argv){
     srand(time(NULL));
     GameOfLife GoL;
+    GoL.lastTimestamp = (unsigned)time(NULL);
 
     if(readStartArguments(argc, argv, &GoL) == 1) {
         return 0;
@@ -47,7 +48,7 @@ int main(int argc, char** argv){
         if (GoL.settings.stepByStep =='y'){
             getchar();
         }else {
-            usleep(50000);
+            usleep(40000);
         }
     }
 

@@ -17,15 +17,16 @@ void initStartScreen() {
     nodelay(stdscr, TRUE);
     noecho();
 
-    /* Hide Cursor */
+    /* Cursor verstecken */
     curs_set(0);
 
-    /* Disable Scrolling in Console */
+    /* Scrollen in der Console abschalten */
     scrollok (stdscr, TRUE);
 
-    /* Add the Colors to the Console */
+    /* Farben in der Console starten */
     start_color();
 
+    /* Farben definieren */
     init_pair(1, COLOR_BLACK, COLOR_WHITE);
     init_pair(2, COLOR_BLACK, COLOR_GREEN);
     init_pair(3, COLOR_WHITE, COLOR_WHITE);
@@ -33,11 +34,12 @@ void initStartScreen() {
     init_pair(5, COLOR_GREEN, COLOR_WHITE);
     init_pair(6, COLOR_BLUE, COLOR_WHITE);
 
-    /* At first clear the Console */
+    /* Console leeren */
     clear();
 }
 
 void updateHeadWin(WINDOW *headWin, GameOfLife GoL) {
+    /* Nur bei der ersten Iteration tun,da es im Cache bleibt und nicht editier werden muss */
     if(GoL.iteration == 0) {
         wbkgd(headWin, COLOR_PAIR(1));
         char appName[255];
@@ -46,7 +48,9 @@ void updateHeadWin(WINDOW *headWin, GameOfLife GoL) {
     }
 
     char interationString[255];
-    sprintf(interationString, "%s:%i", "Interation", GoL.iteration);
+    // IPS => Interationen per Second
+    sprintf(interationString, "%s:%i %s:%i", "Interation", GoL.iteration, "IPS", GoL.interationPerSecond);
+    /* Oben rechts in der Console Positionieren */
     mvwaddstr(headWin, 0, COLS - strlen(interationString) -1, interationString);
     wrefresh(headWin);
 }

@@ -5,6 +5,12 @@
 #include "gol.h"
 
 void CalcIteration(GameOfLife *GoL){
+    if((unsigned)time(NULL) == GoL->lastTimestamp) {
+        GoL->interationPerSecond++;
+    } else {
+        GoL->interationPerSecond = 1;
+    }
+    
     int o, i;
     int aliveNeightbors;
     char **tmpIteration;
