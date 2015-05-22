@@ -18,6 +18,9 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
     GoL->settings.edgeBehavior = 0;
     GoL->settings.importField = 0;
     GoL->interationPerSecond = 0;
+    GoL->settings.rule_aliveNumber = "23";
+    GoL->settings.rule_birthNumber = "3";
+    GoL->interationPerSecond = 0;
     GoL->iteration = 0;
 
     /* Argument Parsing */
@@ -56,6 +59,10 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
                     GoL->settings.aliveCellChar = *argValue;
                 } else if(strcmp(argName, "-dc") == 0) {
                     GoL->settings.deadCellChar = *argValue;
+                } else if(strcmp(argName, "-ra") == 0) {
+                    GoL->settings.rule_aliveNumber = argValue;
+                } else if(strcmp(argName, "-rb") == 0) {
+                    GoL->settings.rule_birthNumber = argValue;
                 } else if(strcmp(argName, "-x") == 0) {
                     GoL->settings.sizeX = atoi(argValue);
                 } else if(strcmp(argName, "-y") == 0) {
