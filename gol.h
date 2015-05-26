@@ -20,7 +20,8 @@ typedef struct {
     char **currentIteration;
     char **nextIteration;
     unsigned int lastTimestamp;
-    unsigned int interationPerSecond;
+    int interationPerSecond;
+    int interationCount;
 } GameOfLife;
 
 

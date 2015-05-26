@@ -39,13 +39,11 @@ void initStartScreen() {
 }
 
 void updateHeadWin(WINDOW *headWin, GameOfLife GoL) {
-    /* Nur bei der ersten Iteration tun,da es im Cache bleibt und nicht editier werden muss */
-    if(GoL.iteration == 0) {
-        wbkgd(headWin, COLOR_PAIR(1));
-        char appName[255];
-        sprintf(appName, "Game of Life v%s", VERSION);
-        waddstr(headWin, appName);
-    }
+    wclear(headWin);
+    wbkgd(headWin, COLOR_PAIR(1));
+    char appName[255];
+    sprintf(appName, "Game of Life v%s", VERSION);
+    waddstr(headWin, appName);
 
     char interationString[255];
     // IPS => Interationen per Second

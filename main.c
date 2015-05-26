@@ -22,13 +22,6 @@ int main(int argc, char** argv){
     if(readStartArguments(argc, argv, &GoL) == 1) {
         return 0;
     }
-    
-    printf("aliveNumber: %s\n", GoL.settings.rule_aliveNumber);
-    printf("aliveNumber_length: %lu\n", strlen(GoL.settings.rule_aliveNumber)/sizeof(GoL.settings.rule_aliveNumber[0]));
-    printf("birthNumber: %s\n", GoL.settings.rule_birthNumber);
-    printf("birthNumber_length: %lu\n", strlen(GoL.settings.rule_birthNumber));
-    getchar();
-
 
     initStartScreen();
     WINDOW *headWin = subwin(stdscr, 1, COLS, 0, 0);

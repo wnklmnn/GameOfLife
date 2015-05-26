@@ -6,11 +6,13 @@
 
 void CalcIteration(GameOfLife *GoL){
     if((unsigned)time(NULL) == GoL->lastTimestamp) {
-        GoL->interationPerSecond++;
+        GoL->interationCount++;
     } else {
-        GoL->interationPerSecond = 1;
+        GoL->interationPerSecond = GoL->interationCount;
+        GoL->interationCount = 1;
+        GoL->lastTimestamp = (unsigned)time(NULL);
     }
-    
+
     int o, i;
     int aliveNeightbors;
     char **tmpIteration;
