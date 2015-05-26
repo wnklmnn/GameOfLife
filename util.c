@@ -17,10 +17,11 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
     GoL->settings.stepByStep = 'n';
     GoL->settings.edgeBehavior = 0;
     GoL->settings.importField = 0;
+    GoL->settings.exportField = 0;
     GoL->interationPerSecond = 0;
     GoL->interationCount = 0;
-    GoL->settings.rule_aliveNumber = "23";
-    GoL->settings.rule_birthNumber = "3";
+    GoL->settings.rule_aliveNumber = 23;
+    GoL->settings.rule_birthNumber = 3;
     GoL->iteration = 0;
 
     /* Argument Parsing */
@@ -37,6 +38,8 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
             GoL->settings.stepByStep = 'y';
         } else if(strcmp(argv[i], "-import") == 0) {
             GoL->settings.importField = 1;
+        } else if(strcmp(argv[i], "-export") == 0) {
+            GoL->settings.exportField = 1;
         } else if(strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "-help") == 0) {
             printf("Usage: GameOfLife \n");
             printf("-v\t\tShows the programm version\n");
@@ -47,7 +50,8 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
             printf("-y\t\tDefines the height of the field\n");
             printf("-step\t\tRun the game by pressing the enter key\n");
             printf("-eb\t\tChange the behavior how the Edge of the Array is handeld\n");
-            printf("-import\t\tLocate the import file\n");
+            printf("-import\t\tImport the exported field\n");
+            printf("-export\t\tExport the current game to file \"export.txt\" (required step mode)\n");
 
             return 1;
         } else {
@@ -60,13 +64,19 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
                 } else if(strcmp(argName, "-dc") == 0) {
                     GoL->settings.deadCellChar = *argValue;
                 } else if(strcmp(argName, "-ra") == 0) {
-                    GoL->settings.rule_aliveNumber = argValue;
+                    GoL->settings.rule_aliveNumber = atoi(argValue);
                 } else if(strcmp(argName, "-rb") == 0) {
-                    GoL->settings.rule_birthNumber = argValue;
+                    GoL->settings.rule_birthNumber = atoi(argValue);
                 } else if(strcmp(argName, "-x") == 0) {
-                    GoL->settings.sizeX = atoi(argValue);
+                    int val = atoi(argValue);
+                    if(val > 0 ) {
+                        GoL->settings.sizeX = val;
+                    }
                 } else if(strcmp(argName, "-y") == 0) {
-                    GoL->settings.sizeY = atoi(argValue);
+                    int val = atoi(argValue);
+                    if(val > 0 ) {
+                        GoL->settings.sizeY = val;
+                    }
                 } else if(strcmp(argName, "-eb") == 0) {
                     GoL->settings.edgeBehavior = atoi(argValue);
                     if (GoL->settings.edgeBehavior<0 || GoL->settings.edgeBehavior>2){
@@ -83,6 +93,18 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
 void exportSpielFeld(GameOfLife *GoL) {
     FILE *f = fopen("export.txt", "w");
     int i, o;
+    /*
+        1 => Random/Step (0 = Random, 1= Step)
+        2 => Alive Char
+        3 => Dead Char
+        4 => EdgeBehavior
+        5 => Alivenumber
+        6 => Birthnumber
+        7 => Interationsnummer
+    */
+
+    fprintf(f, "%i;%c;%c;%i;%i;%i;%i\n", ((GoL->settings.zufallsStart == (int)"y") ? 0 : 1), GoL->settings.aliveCellChar, GoL->settings.deadCellChar, GoL->settings.edgeBehavior, GoL->settings.rule_aliveNumber, GoL->settings.rule_birthNumber, GoL->iteration);
+    /* Spielfeld Größe */
     fprintf(f, "%i;%i\n", GoL->settings.sizeX, GoL->settings.sizeY);
     for(o=0;o<GoL->settings.sizeY;o++){
 	    for(i=0;i<GoL->settings.sizeX;i++){

@@ -31,13 +31,12 @@ int main(int argc, char** argv){
 
     if(GoL.settings.importField == 1) {
         if(importSpielFeld(&GoL) == -1) {
-            waddstr(subWin, "Import fehlgeschlagen.\nTippe eine beliebige Taste um zufälliges Spielfeld zu erstellen.\n");
-            wrefresh(subWin);
-            getchar();
-            wclear(subWin);
-            wrefresh(subWin);
+            wmessage(subWin, "Import fehlgeschlagen.\nTippe eine beliebige Taste um zufälliges Spielfeld zu erstellen.\n");
             ErstelleSpielfeld(&GoL);
         }
+    } else if(GoL.settings.exportField == 1 && GoL.settings.stepByStep == 'n') {
+        wmessage(subWin, "Export abgebrochen: Export funktioniert nur beim Step by Step Mode\nTippe eine beliebige Taste um zufälliges Spielfeld zu erstellen.\n");
+        ErstelleSpielfeld(&GoL);
     } else {
         ErstelleSpielfeld(&GoL);
     }
@@ -47,6 +46,9 @@ int main(int argc, char** argv){
         AusgabeSpielfeld(GoL, subWin);
         updateHeadWin(headWin, GoL);
         if (GoL.settings.stepByStep =='y'){
+            if(GoL.settings.exportField == 1) {
+                exportSpielFeld(&GoL);
+            }
             getchar();
         }else {
             usleep(40000);

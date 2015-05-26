@@ -63,3 +63,12 @@ void AusgabeSpielfeld(GameOfLife GoL, WINDOW* subWin){
 
     wrefresh(subWin);
 }
+
+void wmessage(WINDOW* messageWin, char *message) {
+    wclear(messageWin);
+    waddstr(messageWin, message);
+    wrefresh(messageWin);
+    getchar();
+    wclear(messageWin);
+    wrefresh(messageWin);
+}

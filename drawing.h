@@ -10,6 +10,7 @@
 void initStartScreen();
 void updateHeadWin(WINDOW *headWin, GameOfLife GoL);
 void AusgabeSpielfeld(GameOfLife GoL, WINDOW* subWin);
+void wmessage(WINDOW* messageWin, char *message);
 
 
 #endif // DRAWING_H_INCLUDED

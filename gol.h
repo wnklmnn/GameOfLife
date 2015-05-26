@@ -11,8 +11,9 @@ typedef struct{
     char stepByStep;
     char zufallsStart;
     int importField;
-    char *rule_birthNumber;
-    char *rule_aliveNumber;
+    int exportField;
+    int rule_birthNumber;
+    int rule_aliveNumber;
 } GameOfLifeSettings;
 typedef struct {
     unsigned int iteration;
