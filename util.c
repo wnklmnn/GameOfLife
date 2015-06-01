@@ -20,8 +20,8 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
     GoL->settings.exportField = 0;
     GoL->interationPerSecond = 0;
     GoL->interationCount = 0;
-    GoL->settings.rule_aliveNumber = 23;
-    GoL->settings.rule_birthNumber = 3;
+    GoL->settings.rule_aliveNumber = "23";
+    GoL->settings.rule_birthNumber = "3";
     GoL->iteration = 0;
 
     /* Argument Parsing */
@@ -64,9 +64,9 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
                 } else if(strcmp(argName, "-dc") == 0) {
                     GoL->settings.deadCellChar = *argValue;
                 } else if(strcmp(argName, "-ra") == 0) {
-                    GoL->settings.rule_aliveNumber = atoi(argValue);
+                    GoL->settings.rule_aliveNumber = argValue;
                 } else if(strcmp(argName, "-rb") == 0) {
-                    GoL->settings.rule_birthNumber = atoi(argValue);
+                    GoL->settings.rule_birthNumber = argValue;
                 } else if(strcmp(argName, "-x") == 0) {
                     int val = atoi(argValue);
                     if(val > 0 ) {
@@ -103,7 +103,7 @@ void exportSpielFeld(GameOfLife *GoL) {
         7 => Interationsnummer
     */
 
-    fprintf(f, "%i;%c;%c;%i;%i;%i;%i\n", ((GoL->settings.zufallsStart == (int)"y") ? 0 : 1), GoL->settings.aliveCellChar, GoL->settings.deadCellChar, GoL->settings.edgeBehavior, GoL->settings.rule_aliveNumber, GoL->settings.rule_birthNumber, GoL->iteration);
+//    fprintf(f, "%i;%c;%c;%c;%s;%s;%i\n", ((GoL->settings.zufallsStart == (int)"y") ? 0 : 1), GoL->settings.aliveCellChar, GoL->settings.deadCellChar, GoL->settings.edgeBehavior, GoL->settings.rule_aliveNumber, GoL->settings.rule_birthNumber, GoL->iteration);
     /* Spielfeld Größe */
     fprintf(f, "%i;%i\n", GoL->settings.sizeX, GoL->settings.sizeY);
     for(o=0;o<GoL->settings.sizeY;o++){

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 #include <unistd.h>
 #include "gol.h"
 
@@ -13,8 +14,9 @@ void CalcIteration(GameOfLife *GoL){
         GoL->lastTimestamp = (unsigned)time(NULL);
     }
 
-    int o, i;
+    int o, i, k;
     int aliveNeightbors;
+    int cellStillAlive;
     char **tmpIteration;
     for (o=0; o<GoL->settings.sizeY; o++){
         for(i=0; i<GoL->settings.sizeX; i++){
@@ -60,8 +62,30 @@ void CalcIteration(GameOfLife *GoL){
                 aliveNeightbors += ( GoL->currentIteration[((o+1) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY] [((i+1) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX]==GoL->settings.aliveCellChar ) ? 1 : 0;
             }
         //Lebt oder stirbt die Zelle in der nächsten Generation?
+        cellStillAlive = 0;
+         if (GoL->currentIteration[o][i]==GoL->settings.aliveCellChar){
+             for (k=0; k<strlen(GoL->settings.rule_aliveNumber); k++){
+                if (aliveNeightbors == (GoL->settings.rule_aliveNumber[k])-'0'){
+                    GoL->nextIteration[o][i] = GoL->settings.aliveCellChar;
+                    cellStillAlive = 1;
+                    break;
+                }
+             }
+         }
+         if (GoL->currentIteration[o][i]==GoL->settings.deadCellChar){
+             for (k=0;k<strlen(GoL->settings.rule_birthNumber); k++){
+                if (aliveNeightbors == ((GoL->settings.rule_birthNumber[k])-'0')){
+                    GoL->nextIteration[o][i] = GoL->settings.aliveCellChar;
+                    cellStillAlive = 1;
+                    break;
+                }
+             }
+         }
+         if(cellStillAlive==0){
+            GoL->nextIteration[o][i] = GoL->settings.deadCellChar;
+         }
         //Hier könnte man noch verschiedene Regeln einbauen?
-            if(GoL->currentIteration[o][i] == GoL->settings.aliveCellChar && aliveNeightbors < 2){
+/*            if(GoL->currentIteration[o][i] == GoL->settings.aliveCellChar && aliveNeightbors < 2){
                 GoL->nextIteration[o][i] = GoL->settings.deadCellChar;
             }
             if (GoL->currentIteration[o][i] == GoL->settings.deadCellChar && aliveNeightbors == 3){
@@ -73,7 +97,7 @@ void CalcIteration(GameOfLife *GoL){
             if(GoL->currentIteration[o][i] == GoL->settings.aliveCellChar && aliveNeightbors > 3){
                 GoL->nextIteration[o][i] = GoL->settings.deadCellChar;
             }
-
+*/
         }
     }
     tmpIteration = GoL->currentIteration;
