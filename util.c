@@ -28,7 +28,7 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
     for(i=1;i<argc; i++){
         /* Arguments without value */
         if(strcmp(argv[i], "-v") == 0) {
-            printf("GameOfLife v%s\nCompiled at %s %s\n with GCC %s on %s\n", VERSION, __DATE__, __TIME__, __VERSION__, OS);
+            printf("GameOfLife v%s\nCompiled at %s %s\nwith GCC %s on %s\n", VERSION, __DATE__, __TIME__, __VERSION__, OS);
             return 1;
         } else if(strcmp(argv[i], "-random") == 0) {
             GoL->settings.zufallsStart = 'y';
@@ -52,6 +52,8 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
             printf("-eb\t\tChange the behavior how the Edge of the Array is handeld\n");
             printf("-import\t\tImport the exported field\n");
             printf("-export\t\tExport the current game to file \"export.txt\" (required step mode)\n");
+            printf("-ra\t\tHow many neighbour cells need to be alive to keep the keep the cell alive in the next iteration.\n");
+            printf("-rb\t\tHow many neighbour cells need to be alive so that a currently dead cell is gettin alive again.\n");
 
             return 1;
         } else {
