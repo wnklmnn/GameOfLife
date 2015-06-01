@@ -22,6 +22,7 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
     GoL->interationCount = 0;
     GoL->settings.rule_aliveNumber = "23";
     GoL->settings.rule_birthNumber = "3";
+    GoL->settings.fps = 10;
     GoL->iteration = 0;
 
     /* Argument Parsing */

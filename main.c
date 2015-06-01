@@ -3,6 +3,7 @@
 #include <time.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/time.h>
 #include "util.h"
 #include "drawing.h"
 #include "gol.h"
@@ -15,6 +16,9 @@
 #endif
 
 int main(int argc, char** argv){
+    struct timeval tv;
+    double tmpTime1, tmpTime2;
+    double timePerFrame;
     srand(time(NULL));
     GameOfLife GoL;
     GoL.lastTimestamp = (unsigned)time(NULL);
@@ -22,6 +26,7 @@ int main(int argc, char** argv){
     if(readStartArguments(argc, argv, &GoL) == 1) {
         return 0;
     }
+    timePerFrame = 1000 / GoL.settings.fps;
 
     initStartScreen();
     WINDOW *headWin = subwin(stdscr, 1, COLS, 0, 0);
@@ -42,6 +47,8 @@ int main(int argc, char** argv){
     }
 
     while(1){
+        gettimeofday(&tv, NULL);
+        tmpTime1 = (tv.tv_sec) * 1000 + (tv.tv_usec) / 1000; 
         CalcIteration(&GoL);
         AusgabeSpielfeld(GoL, subWin);
         updateHeadWin(headWin, GoL);
@@ -51,7 +58,10 @@ int main(int argc, char** argv){
             }
             getchar();
         }else {
-            usleep(40000);
+        do{
+            gettimeofday(&tv, NULL);
+            tmpTime2 = (tv.tv_sec) * 1000 + (tv.tv_usec) / 1000 ;
+            }while(tmpTime2 < tmpTime1+timePerFrame);
         }
     }
 
