@@ -14,6 +14,7 @@ typedef struct{
     int exportField;
     char* rule_birthNumber;
     char* rule_aliveNumber;
+    int fps;
 } GameOfLifeSettings;
 typedef struct {
     unsigned int iteration;

@@ -84,6 +84,11 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
                     if (GoL->settings.edgeBehavior<0 || GoL->settings.edgeBehavior>2){
                         GoL->settings.edgeBehavior = 0;
                     }
+                } else if(strcmp(argName, "-fps") == 0) {
+                    GoL->settings.fps = atoi(argValue);
+                    if (GoL->settings.fps<0 ){
+                        GoL->settings.fps = 1;
+                    }
                 }
             }
         }
