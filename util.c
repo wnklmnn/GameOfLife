@@ -22,6 +22,7 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
     GoL->interationCount = 0;
     GoL->settings.rule_aliveNumber = "23";
     GoL->settings.rule_birthNumber = "3";
+    GoL->settings.numberOfPastIterations = 20;
     GoL->settings.fps = 10;
     GoL->iteration = 0;
 
@@ -89,6 +90,11 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
                     GoL->settings.fps = atoi(argValue);
                     if (GoL->settings.fps<0 ){
                         GoL->settings.fps = 1;
+                    }
+                } else if(strcmp(argName, "-ld") == 0) {
+                    GoL->settings.numberOfPastIterations = atoi(argValue);
+                    if (GoL->settings.numberOfPastIterations<0 ){
+                        GoL->settings.numberOfPastIterations = 20;
                     }
                 }
             }

@@ -23,6 +23,7 @@ int main(int argc, char** argv){
     double tmpTime1, tmpTime2;
     #endif
     double timePerFrame;
+    int keepRunning=0;
     srand(time(NULL));
     GameOfLife GoL;
     GoL.lastTimestamp = (unsigned)time(NULL);
@@ -42,12 +43,15 @@ int main(int argc, char** argv){
         if(importSpielFeld(&GoL) == -1) {
             wmessage(subWin, "Import fehlgeschlagen.\nTippe eine beliebige Taste um zufälliges Spielfeld zu erstellen.\n");
             ErstelleSpielfeld(&GoL);
+            ErstellePastIterations(&GoL);
         }
     } else if(GoL.settings.exportField == 1 && GoL.settings.stepByStep == 'n') {
         wmessage(subWin, "Export abgebrochen: Export funktioniert nur beim Step by Step Mode\nTippe eine beliebige Taste um zufälliges Spielfeld zu erstellen.\n");
         ErstelleSpielfeld(&GoL);
+        ErstellePastIterations(&GoL);
     } else {
         ErstelleSpielfeld(&GoL);
+        ErstellePastIterations(&GoL);
     }
 
     while(1){
@@ -61,6 +65,10 @@ int main(int argc, char** argv){
         #endif
         CalcIteration(&GoL);
         AusgabeSpielfeld(GoL, subWin);
+        if(keepRunning == 0 && UeberpruefeSpielfeldAufLoop(GoL) == 1){
+            wmessage(subWin, "Es wurde ein stabiler Zustand festgestellt.\nDurecken Sie eine beliebige Taste um die Ausfuehrung fortzusetzen.\n");
+            keepRunning = 1;
+        }
         updateHeadWin(headWin, GoL);
         if (GoL.settings.stepByStep =='y'){
             if(GoL.settings.exportField == 1) {

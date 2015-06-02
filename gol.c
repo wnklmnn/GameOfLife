@@ -103,7 +103,47 @@ void CalcIteration(GameOfLife *GoL){
     tmpIteration = GoL->currentIteration;
     GoL->currentIteration = GoL->nextIteration;
     GoL->nextIteration = tmpIteration;
+    //Kopieren des Spielfeldes in den bereich der Vergangenen Spielfelder
+    for(o=0; o<GoL->settings.sizeY; o++){
+        memcpy(GoL->pastIterations[GoL->iteration%GoL->settings.numberOfPastIterations][o], tmpIteration[o], sizeof(char)*GoL->settings.sizeX);
+    }
     GoL->iteration += 1;
+}
+
+int  UeberpruefeSpielfeldAufLoop(GameOfLife GoL){
+    int i, o, k;
+    int theSame;
+    for(k=0;k<GoL.settings.numberOfPastIterations;k++){
+        theSame = 1;
+        for(o=0 ;o < GoL.settings.sizeY ;o++){
+	        for(i=0;i<GoL.settings.sizeX;i++){
+	            if (GoL.currentIteration[o][i] != GoL.pastIterations[k][o][i]){
+	                theSame = 0;
+                    break; 
+	            }
+	            if (theSame==0){
+                    break;
+	            }
+	        }
+	        if(theSame==1){
+	            return 1;
+	        }
+	    }
+	    return 0;
+	}
+	return 0;
+}
+
+
+void ErstellePastIterations(GameOfLife *GoL){
+    int i,k;
+    GoL->pastIterations = malloc(GoL->settings.numberOfPastIterations * sizeof(char*));
+    for(k=0;k<GoL->settings.numberOfPastIterations;k++){        
+        GoL->pastIterations[k] = malloc(GoL->settings.sizeY * sizeof(char*));
+	    for(i=0;i<GoL->settings.sizeY;i++){
+            GoL->pastIterations[k][i] = malloc(GoL->settings.sizeX * sizeof(char));
+	    }
+    }
 }
 
 void ErstelleSpielfeld(GameOfLife *GoL){

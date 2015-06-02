@@ -15,6 +15,7 @@ typedef struct{
     char* rule_birthNumber;
     char* rule_aliveNumber;
     int fps;
+    int numberOfPastIterations;
 } GameOfLifeSettings;
 typedef struct {
     unsigned int iteration;
@@ -24,9 +25,12 @@ typedef struct {
     unsigned int lastTimestamp;
     int interationPerSecond;
     int interationCount;
+    char ***pastIterations;
 } GameOfLife;
 
 
+int  UeberpruefeSpielfeldAufLoop(GameOfLife GoL);
+void ErstellePastIterations(GameOfLife *GoL);
 void ErstelleSpielfeld(GameOfLife *GoL);
 void CalcIteration(GameOfLife *GoL);
 
