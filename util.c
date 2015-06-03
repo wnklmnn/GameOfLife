@@ -45,8 +45,8 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
         } else if(strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "-help") == 0) {
             printf("Usage: GameOfLife \n");
             printf("-v\t\tShows the programm version\n");
-            printf("-ac\t\tDefines the charactor a alive cell\n");
-            printf("-dc\t\tDefines the charactor a dead cell\n");
+            printf("-ac\t\tDefines the character of an alive cell\n");
+            printf("-dc\t\tDefines the character of a dead cell\n");
             printf("-random\t\tStart with a random start\n");
             printf("-x\t\tDefines the width of the field\n");
             printf("-y\t\tDefines the height of the field\n");
@@ -56,6 +56,7 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
             printf("-export\t\tExport the current game to file \"export.txt\" (required step mode)\n");
             printf("-ra\t\tHow many neighbour cells need to be alive to keep the keep the cell alive in the next iteration.\n");
             printf("-rb\t\tHow many neighbour cells need to be alive so that a currently dead cell is gettin alive again.\n");
+            printf("-ld\t\tThe number of past iterations to be used for the loop detection\n");
 
             return 1;
         } else {
@@ -93,7 +94,7 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
                     }
                 } else if(strcmp(argName, "-ld") == 0) {
                     GoL->settings.numberOfPastIterations = atoi(argValue);
-                    if (GoL->settings.numberOfPastIterations<0 ){
+                    if (GoL->settings.numberOfPastIterations<1 ){
                         GoL->settings.numberOfPastIterations = 20;
                     }
                 }
