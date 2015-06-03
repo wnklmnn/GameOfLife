@@ -104,6 +104,7 @@ void CalcIteration(GameOfLife *GoL){
     GoL->currentIteration = GoL->nextIteration;
     GoL->nextIteration = tmpIteration;
     //Kopieren des Spielfeldes in den bereich der Vergangenen Spielfelder
+
     for(o=0; o<GoL->settings.sizeY; o++){
         memcpy(GoL->pastIterations[GoL->iteration%GoL->settings.numberOfPastIterations][o], tmpIteration[o], sizeof(char)*GoL->settings.sizeX);
     }
@@ -121,15 +122,15 @@ int  UeberpruefeSpielfeldAufLoop(GameOfLife GoL){
 	                theSame = 0;
                     break; 
 	            }
-	            if (theSame==0){
-                    break;
-	            }
+	            
 	        }
-	        if(theSame==1){
-	            return 1;
-	        }
+	        if (theSame==0){
+                break;
+            }
 	    }
-	    return 0;
+	    if(theSame==1){
+            return 1;
+        }
 	}
 	return 0;
 }
@@ -143,6 +144,11 @@ void ErstellePastIterations(GameOfLife *GoL){
 	    for(i=0;i<GoL->settings.sizeY;i++){
             GoL->pastIterations[k][i] = malloc(GoL->settings.sizeX * sizeof(char));
 	    }
+        /*for(o=0; o<GoL->settings.sizeY; o++){
+            for(i=0; i<GoL->settings.sizeX; i++){
+                GoL->pastIterations[k][o][i] = '\0';
+            }
+        }*/
     }
 }
 
