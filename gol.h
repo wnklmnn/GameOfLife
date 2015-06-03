@@ -10,12 +10,12 @@ typedef struct{
     int edgeBehavior; //0=deadCell, 1=aliveCell, 2=Torus
     char stepByStep;
     char zufallsStart;
-    int importField;
-    int exportField;
     char* rule_birthNumber;
     char* rule_aliveNumber;
     int fps;
     int numberOfPastIterations;
+    char* importFile;
+    char* exportFile;
 } GameOfLifeSettings;
 typedef struct {
     unsigned int iteration;

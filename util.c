@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include "util.h"
 #include "config.h"
+#include "gol.h"
 
 int readStartArguments(int argc, char** argv, GameOfLife *GoL){
 
@@ -16,8 +17,6 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
     GoL->settings.zufallsStart = 'y';
     GoL->settings.stepByStep = 'n';
     GoL->settings.edgeBehavior = 0;
-    GoL->settings.importField = 0;
-    GoL->settings.exportField = 0;
     GoL->interationPerSecond = 0;
     GoL->interationCount = 0;
     GoL->settings.rule_aliveNumber = "23";
@@ -25,6 +24,8 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
     GoL->settings.numberOfPastIterations = 20;
     GoL->settings.fps = 10;
     GoL->iteration = 0;
+    GoL->settings.importFile = "";
+    GoL->settings.exportFile = "";
 
     /* Argument Parsing */
     for(i=1;i<argc; i++){
@@ -34,14 +35,8 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
             return 1;
         } else if(strcmp(argv[i], "-random") == 0) {
             GoL->settings.zufallsStart = 'y';
-            GoL->settings.stepByStep = 'n';
         } else if(strcmp(argv[i], "-step") == 0) {
-            GoL->settings.zufallsStart = 'n';
             GoL->settings.stepByStep = 'y';
-        } else if(strcmp(argv[i], "-import") == 0) {
-            GoL->settings.importField = 1;
-        } else if(strcmp(argv[i], "-export") == 0) {
-            GoL->settings.exportField = 1;
         } else if(strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "-help") == 0) {
             printf("Usage: GameOfLife \n");
             printf("-v\t\tShows the programm version\n");
@@ -52,8 +47,8 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
             printf("-y\t\tDefines the height of the field\n");
             printf("-step\t\tRun the game by pressing the enter key\n");
             printf("-eb\t\tChange the behavior how the Edge of the Array is handeld\n");
-            printf("-import\t\tImport the exported field\n");
-            printf("-export\t\tExport the current game to file \"export.txt\" (required step mode)\n");
+            printf("-import\t\tImport the field from file\n");
+            printf("-export\t\tExport the current game to file (required step mode)\n");
             printf("-ra\t\tHow many neighbour cells need to be alive to keep the keep the cell alive in the next iteration.\n");
             printf("-rb\t\tHow many neighbour cells need to be alive so that a currently dead cell is gettin alive again.\n");
             printf("-ld\t\tThe number of past iterations to be used for the loop detection\n");
@@ -97,6 +92,11 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
                     if (GoL->settings.numberOfPastIterations<1 ){
                         GoL->settings.numberOfPastIterations = 20;
                     }
+                } else if(strcmp(argName, "-import") == 0) {
+                    GoL->settings.importFile = argValue;
+                }
+                else if(strcmp(argName, "-export") == 0) {
+                    GoL->settings.exportFile = argValue;
                 }
             }
         }
@@ -106,82 +106,70 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
 }
 
 void exportSpielFeld(GameOfLife *GoL) {
-    FILE *f = fopen("export.txt", "w");
     int i, o;
-    /*
-        1 => Random/Step (0 = Random, 1= Step)
-        2 => Alive Char
-        3 => Dead Char
-        4 => EdgeBehavior
-        5 => Alivenumber
-        6 => Birthnumber
-        7 => Interationsnummer
-    */
-
-//    fprintf(f, "%i;%c;%c;%c;%s;%s;%i\n", ((GoL->settings.zufallsStart == (int)"y") ? 0 : 1), GoL->settings.aliveCellChar, GoL->settings.deadCellChar, GoL->settings.edgeBehavior, GoL->settings.rule_aliveNumber, GoL->settings.rule_birthNumber, GoL->iteration);
-    /* Spielfeld Größe */
-    fprintf(f, "%i;%i\n", GoL->settings.sizeX, GoL->settings.sizeY);
+    FILE *f = fopen(GoL->settings.exportFile, "w");
+    fprintf(f, "%i;%i;", GoL->settings.sizeX, GoL->settings.sizeY);
     for(o=0;o<GoL->settings.sizeY;o++){
 	    for(i=0;i<GoL->settings.sizeX;i++){
-            fprintf(f, "%i;", (GoL->currentIteration[o][i] == GoL->settings.aliveCellChar) ? 1 : 0);
-	    }
-	    if(o != GoL->settings.sizeY - 1) {
-            fprintf(f, "\n");
+            fprintf(f, "%i", (GoL->currentIteration[o][i] == GoL->settings.aliveCellChar) ? 1 : 0);
 	    }
 	}
 	fclose(f);
 }
 
 int importSpielFeld(GameOfLife *GoL) {
-    int i;
-    if(access("export.txt", F_OK) != -1) {
-        FILE *f = fopen("export.txt", "rb");
-        fseek(f, 0, SEEK_END);
-        long fsize = ftell(f);
-        fseek(f, 0, SEEK_SET);
-        char *string = malloc(fsize + 1);
-        fread(string, fsize, 1, f);
-        fclose(f);
+    int o, i;
+    int intChar;
+    long int startPosOfsizeX;
+    long int endPosOfsizeX;
+    long int startPosOfsizeY;
+    long int endPosOfsizeY;
+    char* tmpChar;
+    FILE *f = fopen(GoL->settings.importFile, "r");
+    //Find SizeX in file
+    startPosOfsizeX = 0;
+    do{
+        intChar = fgetc(f);
+    }while(intChar != ';');
+    endPosOfsizeX = ftell(f);
+    tmpChar = malloc(((endPosOfsizeX-startPosOfsizeX)+1)*sizeof(char));
+    fseek(f, startPosOfsizeX, SEEK_SET);
+    fread(tmpChar, sizeof(char), (endPosOfsizeX-startPosOfsizeX), f);
+    GoL->settings.sizeX = atoi(tmpChar);
+    free(tmpChar);    
+    
+    //Find SizeY in file
+    startPosOfsizeY = endPosOfsizeX;
+    do{
+        intChar = fgetc(f);
+    }while(intChar != ';');
+    endPosOfsizeY = ftell(f);
 
-        char *line = strtok(string, ";");
-        int xSize = atoi(line);
-        int ySize = 0;
+    tmpChar = malloc(((endPosOfsizeY-startPosOfsizeY)+1)*sizeof(char));
+    fseek(f, startPosOfsizeY, SEEK_SET);
+    fread(tmpChar, sizeof(char), (endPosOfsizeY-startPosOfsizeY), f);
+    GoL->settings.sizeY = atoi(tmpChar);
 
-        line = strtok(NULL, "\n");
-        ySize = atoi(line);
+    free(tmpChar);
 
-        GoL->currentIteration = malloc(ySize * sizeof(char*));
-        for(i=0;i<ySize;i++){
-            GoL->currentIteration[i] = malloc(xSize * sizeof(char));
-        }
+    ErstelleSpielfeld(GoL);
+    ErstellePastIterations(GoL);
 
-        GoL->nextIteration = malloc(ySize * sizeof(char*));
-        for(i=0;i<ySize;i++){
-            GoL->nextIteration[i] = malloc(xSize * sizeof(char));
-        }
 
-        int currentX = 0;
-        int currentY = 0;
-        line = strtok(NULL, "\n");
 
-        while(line != NULL) {
-            printf("Row: %s\n", line);
 
-            char *column = strtok(NULL, ";");
-
-            for(currentX=0;i<xSize;currentX++){
-                printf("X: %i, Y: %i => %i\n", currentX, currentY, atoi(column));
-
-                column = strtok(NULL, ";");
+    fseek(f, endPosOfsizeY, SEEK_SET);
+    for(o=0; o<GoL->settings.sizeY; o++){
+        for(i=0; i<GoL->settings.sizeX; i++){
+            intChar = fgetc(f);
+            if(intChar == '1'){
+                GoL->currentIteration[o][i] = GoL->settings.aliveCellChar;
+            }else if(intChar == '0'){
+                GoL->currentIteration[o][i] = GoL->settings.deadCellChar;
             }
-
-            line = strtok(NULL, "\n");
-            currentY++;
         }
-
-        return 0;
-
-    } else {
-        return -1;
     }
+
+    fclose(f);
+    return 0;
 }

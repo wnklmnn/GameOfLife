@@ -32,20 +32,19 @@ int main(int argc, char** argv){
         return 0;
     }
     timePerFrame = 1000 / GoL.settings.fps;
-
     initStartScreen();
     WINDOW *headWin = subwin(stdscr, 1, COLS, 0, 0);
     WINDOW *subWin = subwin(stdscr, LINES - 1, COLS, 1, 0);
 
     updateHeadWin(headWin, GoL);
 
-    if(GoL.settings.importField == 1) {
+    if(strcmp(GoL.settings.importFile, "")) {
         if(importSpielFeld(&GoL) == -1) {
             wmessage(subWin, "Import fehlgeschlagen.\nTippe eine beliebige Taste um zufälliges Spielfeld zu erstellen.\n");
             ErstelleSpielfeld(&GoL);
             ErstellePastIterations(&GoL);
         }
-    } else if(GoL.settings.exportField == 1 && GoL.settings.stepByStep == 'n') {
+    } else if(strcmp(GoL.settings.exportFile, "") && GoL.settings.stepByStep == 'n') {
         wmessage(subWin, "Export abgebrochen: Export funktioniert nur beim Step by Step Mode\nTippe eine beliebige Taste um zufälliges Spielfeld zu erstellen.\n");
         ErstelleSpielfeld(&GoL);
         ErstellePastIterations(&GoL);
@@ -53,6 +52,7 @@ int main(int argc, char** argv){
         ErstelleSpielfeld(&GoL);
         ErstellePastIterations(&GoL);
     }
+    
 
     while(1){
         
@@ -71,7 +71,7 @@ int main(int argc, char** argv){
         }
         updateHeadWin(headWin, GoL);
         if (GoL.settings.stepByStep =='y'){
-            if(GoL.settings.exportField == 1) {
+            if(strcmp(GoL.settings.exportFile, "")) {
                 exportSpielFeld(&GoL);
             }
             getchar();
