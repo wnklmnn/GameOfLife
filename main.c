@@ -10,6 +10,7 @@
 
 #ifdef WIN32
 #include "vendor/pdcurses/curses.h"
+#include <windows.h>
 #else
 #include <curses.h>
 #include <sys/time.h>
@@ -18,6 +19,7 @@
 int main(int argc, char** argv){
     #ifdef WIN32
     //WindowsImplementation
+    double tmpTime1, tmpTime2;
     #else
     struct timeval tv;
     double tmpTime1, tmpTime2;
@@ -52,16 +54,17 @@ int main(int argc, char** argv){
         ErstelleSpielfeld(&GoL);
         ErstellePastIterations(&GoL);
     }
-    
+
 
     while(1){
-        
+
         #ifdef WIN32
         //WindowsImplementation
+        tmpTime1 = GetTickCount();
         #else
         //Linux Implementation
         gettimeofday(&tv, NULL);
-        tmpTime1 = (tv.tv_sec) * 1000 + (tv.tv_usec) / 1000; 
+        tmpTime1 = (tv.tv_sec) * 1000 + (tv.tv_usec) / 1000;
         #endif
         CalcIteration(&GoL);
         AusgabeSpielfeld(GoL, subWin);
@@ -78,9 +81,14 @@ int main(int argc, char** argv){
         }else {
         #ifdef WIN32
         //WindowsImplementation
+        do{
+            usleep(1);
+            tmpTime2 = GetTickCount();
+        }while(tmpTime2 < tmpTime1+timePerFrame);
         #else
         //Linux Implementation
         do{
+            usleep(1);
             gettimeofday(&tv, NULL);
             tmpTime2 = (tv.tv_sec) * 1000 + (tv.tv_usec) / 1000 ;
             }while(tmpTime2 < tmpTime1+timePerFrame);
