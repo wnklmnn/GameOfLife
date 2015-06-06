@@ -9,6 +9,10 @@
 int readStartArguments(int argc, char** argv, GameOfLife *GoL){
 
 	int i;
+	GoL->interationPerSecond = 0;
+	GoL->iteration = 0;
+    GoL->interationCount = 0;
+
 	// Default Settings
     GoL->settings.deadCellChar = ' ';
     GoL->settings.aliveCellChar = 'X';
@@ -17,13 +21,10 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
     GoL->settings.zufallsStart = 'y';
     GoL->settings.stepByStep = 'n';
     GoL->settings.edgeBehavior = 0;
-    GoL->interationPerSecond = 0;
-    GoL->interationCount = 0;
     GoL->settings.rule_aliveNumber = "23";
     GoL->settings.rule_birthNumber = "3";
     GoL->settings.numberOfPastIterations = 20;
     GoL->settings.fps = 10;
-    GoL->iteration = 0;
     GoL->settings.importFile = "";
     GoL->settings.exportFile = "";
 
@@ -37,6 +38,8 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
             GoL->settings.zufallsStart = 'y';
         } else if(strcmp(argv[i], "-export") == 0) {
             GoL->settings.exportFile = "export.txt";
+        } else if(strcmp(argv[i], "-import") == 0) {
+            GoL->settings.importFile = "import.txt";
         } else if(strcmp(argv[i], "-step") == 0) {
             GoL->settings.stepByStep = 'y';
         } else if(strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "-help") == 0) {
@@ -54,6 +57,17 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
             printf("-ra\t\tHow many neighbour cells need to be alive to keep the keep the cell alive in the next iteration.\n");
             printf("-rb\t\tHow many neighbour cells need to be alive so that a currently dead cell is gettin alive again.\n");
             printf("-ld\t\tThe number of past iterations to be used for the loop detection\n");
+            printf("-color\t\tChoose console color (see -colors for all available colors)\n");
+
+            return 1;
+        } else if(strcmp(argv[i], "-colors") == 0) {
+            printf("Available Colors:\n");
+            printf("1\t=>\tBlack/White\n");
+            printf("2\t=>\tBlack/Green\n");
+            printf("3\t=>\tWhite/Black\n");
+            printf("4\t=>\tRed/White\n");
+            printf("5\t=>\tGreen/White\n");
+            printf("6\t=>\tBlue/White\n");
 
             return 1;
         } else {
@@ -91,13 +105,17 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
                     }
                 } else if(strcmp(argName, "-ld") == 0) {
                     GoL->settings.numberOfPastIterations = atoi(argValue);
-                    if (GoL->settings.numberOfPastIterations<1 ){
+                    if (GoL->settings.numberOfPastIterations < 1 ){
                         GoL->settings.numberOfPastIterations = 20;
+                    }
+                } else if(strcmp(argName, "-color") == 0) {
+                    int val = atoi(argValue);
+                    if(val > 0 && val < 7) {
+                        GoL->settings.consoleColor = val;
                     }
                 } else if(strcmp(argName, "-import") == 0) {
                     GoL->settings.importFile = argValue;
-                }
-                else if(strcmp(argName, "-export") == 0) {
+                } else if(strcmp(argName, "-export") == 0) {
                     GoL->settings.exportFile = argValue;
                 }
             }
@@ -168,12 +186,8 @@ int importSpielFeld(GameOfLife *GoL) {
 
     free(tmpChar);
 
-
-
     ErstelleSpielfeld(GoL);
     ErstellePastIterations(GoL);
-
-
 
 
     fseek(f, endPosOfsizeY, SEEK_SET);

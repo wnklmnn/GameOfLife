@@ -45,6 +45,10 @@ int main(int argc, char** argv){
     WINDOW *headWin = subwin(stdscr, 1, COLS, 0, 0);
     WINDOW *subWin = subwin(stdscr, LINES - 1, COLS, 1, 0);
 
+    if(GoL.settings.consoleColor != 0) {
+        wbkgd(subWin, COLOR_PAIR(GoL.settings.consoleColor));
+    }
+
     updateHeadWin(headWin, GoL);
 
     if(strcmp(GoL.settings.importFile, "")) {

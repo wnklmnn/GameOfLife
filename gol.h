@@ -14,6 +14,7 @@ typedef struct{
     char* rule_aliveNumber;
     int fps;
     int numberOfPastIterations;
+    int consoleColor;
     char* importFile;
     char* exportFile;
 } GameOfLifeSettings;
