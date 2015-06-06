@@ -7,16 +7,15 @@
 #include "drawing.h"
 #include "gol.h"
 
-
-#ifdef WIN32
-#include "vendor/pdcurses/curses.h"
-#include <windows.h>
-#else
-#include <curses.h>
+#ifdef __linux__
 #include <sys/time.h>
 #endif
 
 int main(int argc, char** argv){
+    /*
+    Zeit für FPS Begrenzung speichern
+    */
+
     #ifdef WIN32
     //WindowsImplementation
     double tmpTime1, tmpTime2;
@@ -26,14 +25,22 @@ int main(int argc, char** argv){
     #endif
     double timePerFrame;
     int keepRunning=0;
+
     srand(time(NULL));
     GameOfLife GoL;
     GoL.lastTimestamp = (unsigned)time(NULL);
 
+    /*
+      Argumente beim starten des Programmes lesen, auswerten und ins "GoL" schreiben
+    */
     if(readStartArguments(argc, argv, &GoL) == 1) {
         return 0;
     }
     timePerFrame = 1000 / GoL.settings.fps;
+
+    /*
+        Ncurses Sitzung starten
+    */
     initStartScreen();
     WINDOW *headWin = subwin(stdscr, 1, COLS, 0, 0);
     WINDOW *subWin = subwin(stdscr, LINES - 1, COLS, 1, 0);
@@ -42,7 +49,7 @@ int main(int argc, char** argv){
 
     if(strcmp(GoL.settings.importFile, "")) {
         if(importSpielFeld(&GoL) == -1) {
-            wmessage(subWin, "Import fehlgeschlagen.\nTippe eine beliebige Taste um zufälliges Spielfeld zu erstellen.\n");
+            wmessage(subWin, "Import fehlgeschlagen.\nTippe eine beliebige Taste um zufaelliges Spielfeld zu erstellen.\n");
             ErstelleSpielfeld(&GoL);
             ErstellePastIterations(&GoL);
         }
@@ -57,7 +64,6 @@ int main(int argc, char** argv){
 
 
     while(1){
-
         #ifdef WIN32
         //WindowsImplementation
         tmpTime1 = GetTickCount();
@@ -68,6 +74,10 @@ int main(int argc, char** argv){
         #endif
         CalcIteration(&GoL);
         AusgabeSpielfeld(GoL, subWin);
+
+        /*
+            Stabilen Zustand erkennen
+        */
         if(keepRunning == 0 && UeberpruefeSpielfeldAufLoop(GoL) == 1){
             wmessage(subWin, "Es wurde ein stabiler Zustand festgestellt.\nDurecken Sie eine beliebige Taste um die Ausfuehrung fortzusetzen.\n");
             keepRunning = 1;
@@ -78,6 +88,9 @@ int main(int argc, char** argv){
                 exportSpielFeld(&GoL);
             }
             getchar();
+
+            // Buffer der Console leeren
+            fseek(stdin,0,SEEK_END);
         }else {
         #ifdef WIN32
         //WindowsImplementation

@@ -46,8 +46,17 @@ void updateHeadWin(WINDOW *headWin, GameOfLife GoL) {
     waddstr(headWin, appName);
 
     char interationString[255];
-    // IPS => Interationen per Second
-    sprintf(interationString, "%s:%i %s:%i", "Interation", GoL.iteration, "IPS", GoL.interationPerSecond);
+
+    /*
+        Interationen per Sekunde weglassen bei stepByStep mode
+    */
+    if (GoL.settings.stepByStep =='y') {
+        sprintf(interationString, "%s:%i", "Interation", GoL.iteration);
+    } else {
+        sprintf(interationString, "%s:%i %s:%i", "Interation", GoL.iteration, "IPS", GoL.interationPerSecond);
+    }
+
+
     /* Oben rechts in der Console Positionieren */
     mvwaddstr(headWin, 0, COLS - strlen(interationString) -1, interationString);
     wrefresh(headWin);
