@@ -27,6 +27,7 @@ int readStartArguments(int argc, char** argv, GameOfLife *GoL){
     GoL->settings.fps = 10;
     GoL->settings.importFile = "";
     GoL->settings.exportFile = "";
+    GoL->settings.consoleColor = 1;
 
     /* Argument Parsing */
     for(i=1;i<argc; i++){
