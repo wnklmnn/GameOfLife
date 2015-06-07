@@ -145,6 +145,8 @@ int importSpielFeld(GameOfLife *GoL) {
     long int endPosOfsizeX;
     long int startPosOfsizeY;
     long int endPosOfsizeY;
+    long int startPosOfIteration;
+    long int endPosOfIteration;
     char* tmpChar;
     FILE *f = fopen(GoL->settings.importFile, "r");
     //Find SizeX in file
@@ -174,15 +176,15 @@ int importSpielFeld(GameOfLife *GoL) {
     free(tmpChar);
 
     // Read Interation
-    startPosOfsizeY = endPosOfsizeX;
+    startPosOfIteration = endPosOfsizeY;
     do{
         intChar = fgetc(f);
     }while(intChar != ';');
-    endPosOfsizeY = ftell(f);
+    endPosOfIteration = ftell(f);
 
-    tmpChar = malloc(((endPosOfsizeY-startPosOfsizeY)+1)*sizeof(char));
-    fseek(f, startPosOfsizeY, SEEK_SET);
-    fread(tmpChar, sizeof(char), (endPosOfsizeY-startPosOfsizeY), f);
+    tmpChar = malloc(((endPosOfIteration-startPosOfIteration)+1)*sizeof(char));
+    fseek(f, startPosOfIteration, SEEK_SET);
+    fread(tmpChar, sizeof(char), (endPosOfIteration-startPosOfIteration), f);
     GoL->iteration = atoi(tmpChar);
 
     free(tmpChar);
