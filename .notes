@@ -15,3 +15,5 @@ Wie die Regeln in eine Datei auslagern
         3: Nummer der Lebenden Nachbarn
         ...
         
+Edgebehavior 1 fehlt noch.
+	Zellen außerhalb der Feldes sollen als Lebend angesehen werden.
