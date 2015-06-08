@@ -29,7 +29,7 @@ void CalcIteration(GameOfLife *GoL){
                 //O
                 aliveNeightbors += ( o>0 && GoL->currentIteration[o-1][i]==GoL->settings.aliveCellChar ) ? 1 : 0;
                 //OR
-                aliveNeightbors += ( o>0 && i < GoL->settings.sizeX && GoL->currentIteration[o-1][i+1]==GoL->settings.aliveCellChar ) ? 1 : 0;
+                aliveNeightbors += ( o>0 && i < GoL->settings.sizeX -1 && GoL->currentIteration[o-1][i+1]==GoL->settings.aliveCellChar ) ? 1 : 0;
                 //L
                 aliveNeightbors += ( i > 0 && GoL->currentIteration[o][i-1]==GoL->settings.aliveCellChar ) ? 1 : 0;
                 //R
@@ -39,8 +39,10 @@ void CalcIteration(GameOfLife *GoL){
                 //U
                 aliveNeightbors += ( o < GoL->settings.sizeY-1 && GoL->currentIteration[o+1][i]==GoL->settings.aliveCellChar ) ? 1 : 0;
                 //UR
-                aliveNeightbors += ( o<GoL->settings.sizeY-1 && i < GoL->settings.sizeX && GoL->currentIteration[o+1][i+1]==GoL->settings.aliveCellChar ) ? 1 : 0;
-            }else if (GoL->settings.edgeBehavior == 1){ // Das spielfeld ist Kugelförmig.
+                aliveNeightbors += ( o<GoL->settings.sizeY-1 && i < GoL->settings.sizeX -1 && GoL->currentIteration[o+1][i+1]==GoL->settings.aliveCellChar ) ? 1 : 0;
+            }else if (GoL->settings.edgeBehavior == 1){ //Ausßerhalb sind Lebende Zellen
+
+            }else if (GoL->settings.edgeBehavior == 2){ // Das spielfeld ist Kugelförmig.
                 aliveNeightbors = 0;
                 //OL
                 aliveNeightbors += ( GoL->currentIteration[((o-1) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY][((i-1) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX]==GoL->settings.aliveCellChar ) ? 1 : 0;
