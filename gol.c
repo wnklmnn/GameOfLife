@@ -40,9 +40,7 @@ void CalcIteration(GameOfLife *GoL){
                 aliveNeightbors += ( o < GoL->settings.sizeY-1 && GoL->currentIteration[o+1][i]==GoL->settings.aliveCellChar ) ? 1 : 0;
                 //UR
                 aliveNeightbors += ( o<GoL->settings.sizeY-1 && i < GoL->settings.sizeX && GoL->currentIteration[o+1][i+1]==GoL->settings.aliveCellChar ) ? 1 : 0;
-            }else if (GoL->settings.edgeBehavior == 1){ //Ausßerhalb sind Lebende Zellen
-
-            }else if (GoL->settings.edgeBehavior == 2){ // Das spielfeld ist Kugelförmig.
+            }else if (GoL->settings.edgeBehavior == 1){ // Das spielfeld ist Kugelförmig.
                 aliveNeightbors = 0;
                 //OL
                 aliveNeightbors += ( GoL->currentIteration[((o-1) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY][((i-1) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX]==GoL->settings.aliveCellChar ) ? 1 : 0;
@@ -120,9 +118,9 @@ int  UeberpruefeSpielfeldAufLoop(GameOfLife GoL){
 	        for(i=0;i<GoL.settings.sizeX;i++){
 	            if (GoL.currentIteration[o][i] != GoL.pastIterations[k][o][i]){
 	                theSame = 0;
-                    break; 
+                    break;
 	            }
-	            
+
 	        }
 	        if (theSame==0){
                 break;
@@ -139,7 +137,7 @@ int  UeberpruefeSpielfeldAufLoop(GameOfLife GoL){
 void ErstellePastIterations(GameOfLife *GoL){
     int i,k;
     GoL->pastIterations = malloc(GoL->settings.numberOfPastIterations * sizeof(char*));
-    for(k=0;k<GoL->settings.numberOfPastIterations;k++){        
+    for(k=0;k<GoL->settings.numberOfPastIterations;k++){
         GoL->pastIterations[k] = malloc(GoL->settings.sizeY * sizeof(char*));
 	    for(i=0;i<GoL->settings.sizeY;i++){
             GoL->pastIterations[k][i] = malloc(GoL->settings.sizeX * sizeof(char));
