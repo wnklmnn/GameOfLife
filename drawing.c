@@ -9,10 +9,11 @@
 #include <curses.h>
 #endif
 
-void initStartScreen() {
-    #ifdef WIN32
-        SetConsoleTitle(TEXT("Game of Life"));
-    #endif
+void initStartScreen()
+{
+#ifdef WIN32
+    SetConsoleTitle(TEXT("Game of Life"));
+#endif
     initscr();
     nodelay(stdscr, TRUE);
     noecho();
@@ -38,7 +39,8 @@ void initStartScreen() {
     clear();
 }
 
-void updateHeadWin(WINDOW *headWin, GameOfLife GoL) {
+void updateHeadWin(WINDOW* headWin, GameOfLife GoL)
+{
     wclear(headWin);
     wbkgd(headWin, COLOR_PAIR(1));
     char appName[255];
@@ -50,7 +52,7 @@ void updateHeadWin(WINDOW *headWin, GameOfLife GoL) {
     /*
         Interationen per Sekunde weglassen bei stepByStep mode
     */
-    if (GoL.settings.stepByStep =='y') {
+    if (GoL.settings.stepByStep == 'y') {
         sprintf(interationString, "%s:%i", "Interation", GoL.iteration);
     } else {
         sprintf(interationString, "%s:%i %s:%i", "Interation", GoL.iteration, "IPS", GoL.interationPerSecond);
@@ -58,22 +60,24 @@ void updateHeadWin(WINDOW *headWin, GameOfLife GoL) {
 
 
     /* Oben rechts in der Console Positionieren */
-    mvwaddstr(headWin, 0, COLS - strlen(interationString) -1, interationString);
+    mvwaddstr(headWin, 0, COLS - strlen(interationString) - 1, interationString);
     wrefresh(headWin);
 }
 
-void AusgabeSpielfeld(GameOfLife GoL, WINDOW* subWin){
+void AusgabeSpielfeld(GameOfLife GoL, WINDOW* subWin)
+{
     int o, i;
-	for (o=0; o< GoL.settings.sizeY;o++){
-	    for(i=0;i<GoL.settings.sizeX;i++){
+    for (o = 0; o < GoL.settings.sizeY; o++) {
+        for(i = 0; i < GoL.settings.sizeX; i++) {
             mvwaddch(subWin, o, i, GoL.currentIteration[o][i]);
-	    }
+        }
     }
 
     wrefresh(subWin);
 }
 
-void wmessage(WINDOW* messageWin, char *message) {
+void wmessage(WINDOW* messageWin, char* message)
+{
     wclear(messageWin);
     waddstr(messageWin, message);
     wrefresh(messageWin);

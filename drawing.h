@@ -8,9 +8,9 @@
 #ifndef DRAWING_H_INCLUDED
 #define DRAWING_H_INCLUDED
 void initStartScreen();
-void updateHeadWin(WINDOW *headWin, GameOfLife GoL);
+void updateHeadWin(WINDOW* headWin, GameOfLife GoL);
 void AusgabeSpielfeld(GameOfLife GoL, WINDOW* subWin);
-void wmessage(WINDOW* messageWin, char *message);
+void wmessage(WINDOW* messageWin, char* message);
 
 
 #endif // DRAWING_H_INCLUDED

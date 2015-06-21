@@ -11,20 +11,21 @@
 #include <sys/time.h>
 #endif
 
-int main(int argc, char** argv){
+int main(int argc, char** argv)
+{
     /*
     Zeit für FPS Begrenzung speichern
     */
 
-    #ifdef WIN32
+#ifdef WIN32
     //WindowsImplementation
     double tmpTime1, tmpTime2;
-    #else
+#else
     struct timeval tv;
     double tmpTime1, tmpTime2;
-    #endif
+#endif
     double timePerFrame;
-    int keepRunning=0;
+    int keepRunning = 0;
 
     srand(time(NULL));
     GameOfLife GoL;
@@ -42,8 +43,8 @@ int main(int argc, char** argv){
         Ncurses Sitzung starten
     */
     initStartScreen();
-    WINDOW *headWin = subwin(stdscr, 1, COLS, 0, 0);
-    WINDOW *subWin = subwin(stdscr, LINES - 1, COLS, 1, 0);
+    WINDOW* headWin = subwin(stdscr, 1, COLS, 0, 0);
+    WINDOW* subWin = subwin(stdscr, LINES - 1, COLS, 1, 0);
 
     if(GoL.settings.consoleColor != 0) {
         wbkgd(subWin, COLOR_PAIR(GoL.settings.consoleColor));
@@ -61,9 +62,9 @@ int main(int argc, char** argv){
         wmessage(subWin, "Export abgebrochen: Export funktioniert nur beim Step by Step Mode\nTippe eine beliebige Taste um zufälliges Spielfeld zu erstellen.\n");
         ErstelleSpielfeld(&GoL);
         ErstellePastIterations(&GoL);
-    } else if (GoL.settings.edgeBehavior== 1){
+    } else if (GoL.settings.edgeBehavior == 1) {
         wmessage(subWin, "Oops.\nDiese Funktion ist noch nicht implementiert.\n\nEdgeBehavior wird auf '0' gesetzt.\n");
-        GoL.settings.edgeBehavior=0;
+        GoL.settings.edgeBehavior = 0;
         ErstelleSpielfeld(&GoL);
         ErstellePastIterations(&GoL);
     } else {
@@ -72,49 +73,49 @@ int main(int argc, char** argv){
     }
 
 
-    while(1){
-        #ifdef WIN32
+    while(1) {
+#ifdef WIN32
         //WindowsImplementation
         tmpTime1 = GetTickCount();
-        #else
+#else
         //Linux Implementation
         gettimeofday(&tv, NULL);
         tmpTime1 = (tv.tv_sec) * 1000 + (tv.tv_usec) / 1000;
-        #endif
+#endif
         CalcIteration(&GoL);
         AusgabeSpielfeld(GoL, subWin);
 
         /*
             Stabilen Zustand erkennen
         */
-        if(keepRunning == 0 && UeberpruefeSpielfeldAufLoop(GoL) == 1){
+        if(keepRunning == 0 && UeberpruefeSpielfeldAufLoop(GoL) == 1) {
             wmessage(subWin, "Es wurde ein stabiler Zustand festgestellt.\nDurecken Sie eine beliebige Taste um die Ausfuehrung fortzusetzen.\n");
             keepRunning = 1;
         }
         updateHeadWin(headWin, GoL);
-        if (GoL.settings.stepByStep =='y'){
+        if (GoL.settings.stepByStep == 'y') {
             if(strcmp(GoL.settings.exportFile, "")) {
                 exportSpielFeld(&GoL);
             }
             getchar();
 
             // Buffer der Console leeren
-            fseek(stdin,0,SEEK_END);
-        }else {
-        #ifdef WIN32
-        //WindowsImplementation
-        do{
-            usleep(1);
-            tmpTime2 = GetTickCount();
-        }while(tmpTime2 < tmpTime1+timePerFrame);
-        #else
-        //Linux Implementation
-        do{
-            usleep(1);
-            gettimeofday(&tv, NULL);
-            tmpTime2 = (tv.tv_sec) * 1000 + (tv.tv_usec) / 1000 ;
-            }while(tmpTime2 < tmpTime1+timePerFrame);
-        #endif
+            fseek(stdin, 0, SEEK_END);
+        } else {
+#ifdef WIN32
+            //WindowsImplementation
+            do {
+                usleep(1);
+                tmpTime2 = GetTickCount();
+            } while(tmpTime2 < tmpTime1 + timePerFrame);
+#else
+            //Linux Implementation
+            do {
+                usleep(1);
+                gettimeofday(&tv, NULL);
+                tmpTime2 = (tv.tv_sec) * 1000 + (tv.tv_usec) / 1000 ;
+            } while(tmpTime2 < tmpTime1 + timePerFrame);
+#endif
         }
     }
 
