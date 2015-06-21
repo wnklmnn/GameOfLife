@@ -5,6 +5,9 @@
 #include <unistd.h>
 #include "gol.h"
 
+/*
+    In dieser Funktion wir die naechste Iteration berrechnet und die Zeiger aud die aktuelle und naechste Iteration werden getauscht
+*/
 void CalcIteration(GameOfLife* GoL)
 {
     if((unsigned)time(NULL) == GoL->lastTimestamp) {
@@ -63,6 +66,9 @@ void CalcIteration(GameOfLife* GoL)
                 aliveNeightbors += ( GoL->currentIteration[((o + 1) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY] [((i + 1) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX] == GoL->settings.aliveCellChar ) ? 1 : 0;
             }
             //Lebt oder stirbt die Zelle in der nächsten Generation?
+            /*
+                In diesem Bereich wird der Zustand der Zellen festgelegt anhand der Regeln welche in GoL->settings.rule_aliveNumber und GoL->settings.rule_birthNumber hinterlegt sind
+            */
             cellStillAlive = 0;
             if (GoL->currentIteration[o][i] == GoL->settings.aliveCellChar) {
                 for (k = 0; k < strlen(GoL->settings.rule_aliveNumber); k++) {
@@ -85,33 +91,25 @@ void CalcIteration(GameOfLife* GoL)
             if(cellStillAlive == 0) {
                 GoL->nextIteration[o][i] = GoL->settings.deadCellChar;
             }
-            //Hier könnte man noch verschiedene Regeln einbauen?
-            /*            if(GoL->currentIteration[o][i] == GoL->settings.aliveCellChar && aliveNeightbors < 2){
-                            GoL->nextIteration[o][i] = GoL->settings.deadCellChar;
-                        }
-                        if (GoL->currentIteration[o][i] == GoL->settings.deadCellChar && aliveNeightbors == 3){
-                            GoL->nextIteration[o][i] = GoL->settings.aliveCellChar;
-                        }
-                        if (GoL->currentIteration[o][i] == GoL->settings.aliveCellChar && (aliveNeightbors == 2 || aliveNeightbors == 3)){
-                            GoL->nextIteration[o][i] = GoL->settings.aliveCellChar;
-                        }
-                        if(GoL->currentIteration[o][i] == GoL->settings.aliveCellChar && aliveNeightbors > 3){
-                            GoL->nextIteration[o][i] = GoL->settings.deadCellChar;
-                        }
-            */
         }
     }
     tmpIteration = GoL->currentIteration;
     GoL->currentIteration = GoL->nextIteration;
     GoL->nextIteration = tmpIteration;
-    //Kopieren des Spielfeldes in den bereich der Vergangenen Spielfelder
-
+    
+    /*
+        Kopieren des Spielfeldes in den bereich der Vergangenen Spielfelder
+    */
     for(o = 0; o < GoL->settings.sizeY; o++) {
         memcpy(GoL->pastIterations[GoL->iteration % GoL->settings.numberOfPastIterations][o], tmpIteration[o], sizeof(char)*GoL->settings.sizeX);
     }
     GoL->iteration += 1;
 }
 
+/*
+    In dieser Funktion wird durch die Vergangenen Iterationen iteriert und ueberprueft ob die aktuelle Iteration schon einmal vorhanden war.
+    Wenn dies der Fall ist dann ist ein stabiler Zustand erreicht.
+*/
 int  UeberpruefeSpielfeldAufLoop(GameOfLife GoL)
 {
     int i, o, k;
@@ -137,7 +135,9 @@ int  UeberpruefeSpielfeldAufLoop(GameOfLife GoL)
     return 0;
 }
 
-
+/*
+    In dieser Funktion wird Speicher allokiert um die vergangenen Iterationen zu speichern
+*/
 void ErstellePastIterations(GameOfLife* GoL)
 {
     int i, k;
@@ -155,6 +155,10 @@ void ErstellePastIterations(GameOfLife* GoL)
     }
 }
 
+
+/*
+    In dieser Funktion wird Speicher fuer die aktuelle und die naechste Iteration allokiert.
+*/
 void ErstelleSpielfeld(GameOfLife* GoL)
 {
     int i, o;
