@@ -6,6 +6,9 @@
 #include "config.h"
 #include "gol.h"
 
+/*
+    In dieser Funktion werden die Parameter vom Programm Programmstart verarbeitet
+*/
 int readStartArguments(int argc, char** argv, GameOfLife* GoL)
 {
 
@@ -127,6 +130,9 @@ int readStartArguments(int argc, char** argv, GameOfLife* GoL)
     return 0;
 }
 
+/*
+    Diese Funktion oeffnet die Datei GoL->settings.exportFile und schreibt den aktuellen Zustand, die hoehe und breite des Spielfeldes und die Nummer der Iteration hinein
+*/
 void exportSpielFeld(GameOfLife* GoL)
 {
     int i, o;
@@ -140,6 +146,9 @@ void exportSpielFeld(GameOfLife* GoL)
     fclose(f);
 }
 
+/*
+    In dieser Funktion wird die Datei aus GoL->settings.importFile geoeffnet und der darin gespeicherte Zustand geladen
+*/
 int importSpielFeld(GameOfLife* GoL)
 {
     int o, i;
