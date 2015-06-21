@@ -193,7 +193,7 @@ int importSpielFeld(GameOfLife *GoL) {
     ErstellePastIterations(GoL);
 
 
-    fseek(f, endPosOfsizeY, SEEK_SET);
+    fseek(f, endPosOfsizeY+1, SEEK_SET);
     for(o=0; o<GoL->settings.sizeY; o++){
         for(i=0; i<GoL->settings.sizeX; i++){
             intChar = fgetc(f);
