@@ -9,6 +9,9 @@
 #include <curses.h>
 #endif
 
+/*
+    Standardeinstellungen fuer die Konsole laden
+*/
 void initStartScreen()
 {
 #ifdef WIN32
@@ -39,6 +42,9 @@ void initStartScreen()
     clear();
 }
 
+/*
+    Diese Funktion aktualisiert die erste Zeile des Bildschirms mit den neuen Werten fuer die Iterationen pro Sekunde und der Nummer der aktuellen Iteration
+*/
 void updateHeadWin(WINDOW* headWin, GameOfLife GoL)
 {
     wclear(headWin);
@@ -64,6 +70,9 @@ void updateHeadWin(WINDOW* headWin, GameOfLife GoL)
     wrefresh(headWin);
 }
 
+/*
+    Die Funktion iteriert durch die aktuelle Iteration und gibt einzelnen Zellen aus
+*/
 void AusgabeSpielfeld(GameOfLife GoL, WINDOW* subWin)
 {
     int o, i;
