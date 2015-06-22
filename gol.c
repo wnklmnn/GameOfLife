@@ -18,7 +18,7 @@ void CalcIteration(GameOfLife* GoL)
         GoL->lastTimestamp = (unsigned)time(NULL);
     }
 
-    int o, i, k;
+    int o, i, k, outer, inner;
     int aliveNeightbors;
     int cellStillAlive;
     char** tmpIteration;
@@ -28,42 +28,43 @@ void CalcIteration(GameOfLife* GoL)
             //zaehlen der Lebenden Nachbarn je nach einstellung
             if (GoL->settings.edgeBehavior == 0) { // Ausﬂerhalb sind Tote Zellen
                 aliveNeightbors = 0;
-                //OL
-                aliveNeightbors += ( o > 0 && i > 0 && GoL->currentIteration[o - 1][i - 1] == GoL->settings.aliveCellChar ) ? 1 : 0;
-                //O
-                aliveNeightbors += ( o > 0 && GoL->currentIteration[o - 1][i] == GoL->settings.aliveCellChar ) ? 1 : 0;
-                //OR
-                aliveNeightbors += ( o > 0 && i < GoL->settings.sizeX - 1 && GoL->currentIteration[o - 1][i + 1] == GoL->settings.aliveCellChar ) ? 1 : 0;
-                //L
-                aliveNeightbors += ( i > 0 && GoL->currentIteration[o][i - 1] == GoL->settings.aliveCellChar ) ? 1 : 0;
-                //R
-                aliveNeightbors += ( i < GoL->settings.sizeX - 1  && GoL->currentIteration[o][i + 1] == GoL->settings.aliveCellChar ) ? 1 : 0;
-                //UL
-                aliveNeightbors += ( o < GoL->settings.sizeY - 1 && i > 0 && GoL->currentIteration[o + 1][i - 1] == GoL->settings.aliveCellChar ) ? 1 : 0;
-                //U
-                aliveNeightbors += ( o < GoL->settings.sizeY - 1 && GoL->currentIteration[o + 1][i] == GoL->settings.aliveCellChar ) ? 1 : 0;
-                //UR
-                aliveNeightbors += ( o < GoL->settings.sizeY - 1 && i < GoL->settings.sizeX - 1 && GoL->currentIteration[o + 1][i + 1] == GoL->settings.aliveCellChar ) ? 1 : 0;
+                for(outer = -1; outer < 2; outer++) {
+                    for(inner = -1; inner < 2; inner++) {
+                        if(outer == 0 && inner == 0) {
+                            continue;
+                        }
+                        if((o + outer) < 0 || (o + outer) > GoL->settings.sizeY - 1 || (i + inner) < 0 || (i + inner) > GoL->settings.sizeX - 1) {
+                            continue;
+                        } else {
+                            aliveNeightbors += (GoL->currentIteration[o + outer ][i + inner] == GoL->settings.aliveCellChar ) ? 1 : 0;
+                        }
+                    }
+                }
             } else if (GoL->settings.edgeBehavior == 1) { //Ausﬂerhalb sind Lebende Zellen
-
+                aliveNeightbors = 0;
+                for(outer = -1; outer < 2; outer++) {
+                    for(inner = -1; inner < 2; inner++) {
+                        if(outer == 0 && inner == 0) {
+                            continue;
+                        }
+                        if((o + outer) < 0 || (o + outer) > GoL->settings.sizeY - 1 || (i + inner) < 0 || (i + inner) > GoL->settings.sizeX - 1) {
+                            aliveNeightbors ++;
+                            continue;
+                        } else {
+                            aliveNeightbors += (GoL->currentIteration[o + outer ][i + inner] == GoL->settings.aliveCellChar ) ? 1 : 0;
+                        }
+                    }
+                }
             } else if (GoL->settings.edgeBehavior == 2) { // Das spielfeld ist Kugelfˆrmig.
                 aliveNeightbors = 0;
-                //OL
-                aliveNeightbors += ( GoL->currentIteration[((o - 1) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY][((i - 1) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX] == GoL->settings.aliveCellChar ) ? 1 : 0;
-                //O
-                aliveNeightbors += ( GoL->currentIteration[((o - 1) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY][((i) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX] == GoL->settings.aliveCellChar ) ? 1 : 0;
-                //OR
-                aliveNeightbors += ( GoL->currentIteration[((o - 1) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY][((i + 1) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX] == GoL->settings.aliveCellChar ) ? 1 : 0;
-                //L
-                aliveNeightbors += ( GoL->currentIteration[((o) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY][((i - 1) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX] == GoL->settings.aliveCellChar ) ? 1 : 0;
-                //R
-                aliveNeightbors += ( GoL->currentIteration[((o) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY][((i + 1) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX] == GoL->settings.aliveCellChar ) ? 1 : 0;
-                //UL
-                aliveNeightbors += ( GoL->currentIteration[((o + 1) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY][((i - 1) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX] == GoL->settings.aliveCellChar ) ? 1 : 0;
-                //U
-                aliveNeightbors += ( GoL->currentIteration[((o + 1) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY][((i) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX] == GoL->settings.aliveCellChar ) ? 1 : 0;
-                //UR
-                aliveNeightbors += ( GoL->currentIteration[((o + 1) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY] [((i + 1) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX] == GoL->settings.aliveCellChar ) ? 1 : 0;
+                for(outer = -1; outer < 2; outer++) {
+                    for(inner = -1; inner < 2; inner++) {
+                        if(outer == 0 && inner == 0) {
+                            continue;
+                        }
+                        aliveNeightbors += ( GoL->currentIteration[((o + outer) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY][((i + inner) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX] == GoL->settings.aliveCellChar ) ? 1 : 0;
+                    }
+                }
             }
             //Lebt oder stirbt die Zelle in der n‰chsten Generation?
             /*
@@ -96,7 +97,7 @@ void CalcIteration(GameOfLife* GoL)
     tmpIteration = GoL->currentIteration;
     GoL->currentIteration = GoL->nextIteration;
     GoL->nextIteration = tmpIteration;
-    
+
     /*
         Kopieren des Spielfeldes in den bereich der Vergangenen Spielfelder
     */

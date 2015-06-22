@@ -62,11 +62,6 @@ int main(int argc, char** argv)
         wmessage(subWin, "Export abgebrochen: Export funktioniert nur beim Step by Step Mode\nTippe eine beliebige Taste um zufälliges Spielfeld zu erstellen.\n");
         ErstelleSpielfeld(&GoL);
         ErstellePastIterations(&GoL);
-    } else if (GoL.settings.edgeBehavior == 1) {
-        wmessage(subWin, "Oops.\nDiese Funktion ist noch nicht implementiert.\n\nEdgeBehavior wird auf '0' gesetzt.\n");
-        GoL.settings.edgeBehavior = 0;
-        ErstelleSpielfeld(&GoL);
-        ErstellePastIterations(&GoL);
     } else {
         ErstelleSpielfeld(&GoL);
         ErstellePastIterations(&GoL);
