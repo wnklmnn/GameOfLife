@@ -77,8 +77,8 @@ int main(int argc, char** argv)
         gettimeofday(&tv, NULL);
         tmpTime1 = (tv.tv_sec) * 1000 + (tv.tv_usec) / 1000;
 #endif
-        CalcIteration(&GoL);
         AusgabeSpielfeld(GoL, subWin);
+        CalcIteration(&GoL);
 
         /*
             Stabilen Zustand erkennen

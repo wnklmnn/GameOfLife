@@ -137,11 +137,12 @@ void exportSpielFeld(GameOfLife* GoL)
 {
     int i, o;
     FILE* f = fopen(GoL->settings.exportFile, "w");
-    fprintf(f, "%i;%i;%i;", GoL->settings.sizeX, GoL->settings.sizeY, GoL->iteration);
+    fprintf(f, "%i;%i;%i;\n", GoL->settings.sizeX, GoL->settings.sizeY, GoL->iteration);
     for(o = 0; o < GoL->settings.sizeY; o++) {
         for(i = 0; i < GoL->settings.sizeX; i++) {
             fprintf(f, "%i", (GoL->currentIteration[o][i] == GoL->settings.aliveCellChar) ? 1 : 0);
         }
+        fprintf(f, "\n");
     }
     fclose(f);
 }
@@ -192,6 +193,7 @@ int importSpielFeld(GameOfLife* GoL)
     do {
         intChar = fgetc(f);
     } while(intChar != ';');
+    fgetc(f);
     endPosOfIteration = ftell(f);
 
     tmpChar = malloc(((endPosOfIteration - startPosOfIteration) + 1) * sizeof(char));
@@ -205,7 +207,7 @@ int importSpielFeld(GameOfLife* GoL)
     ErstellePastIterations(GoL);
 
 
-    fseek(f, endPosOfsizeY + 1, SEEK_SET);
+    fseek(f, endPosOfIteration, SEEK_SET);
     for(o = 0; o < GoL->settings.sizeY; o++) {
         for(i = 0; i < GoL->settings.sizeX; i++) {
             intChar = fgetc(f);
@@ -215,7 +217,9 @@ int importSpielFeld(GameOfLife* GoL)
                 GoL->currentIteration[o][i] = GoL->settings.deadCellChar;
             }
         }
+        fgetc(f);
     }
+
 
     fclose(f);
     return 0;
