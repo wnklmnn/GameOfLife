@@ -26,46 +26,30 @@ void CalcIteration(GameOfLife* GoL)
         for(i = 0; i < GoL->settings.sizeX; i++) {
             GoL->nextIteration[o][i] = GoL->settings.deadCellChar;
             //zaehlen der Lebenden Nachbarn je nach einstellung
-            if (GoL->settings.edgeBehavior == 0) { // Ausßerhalb sind Tote Zellen
-                aliveNeightbors = 0;
-                for(outer = -1; outer < 2; outer++) {
-                    for(inner = -1; inner < 2; inner++) {
-                        if(outer == 0 && inner == 0) {
-                            continue;
-                        }
-                        if((o + outer) < 0 || (o + outer) > GoL->settings.sizeY - 1 || (i + inner) < 0 || (i + inner) > GoL->settings.sizeX - 1) {
-                            continue;
-                        } else {
-                            aliveNeightbors += (GoL->currentIteration[o + outer ][i + inner] == GoL->settings.aliveCellChar ) ? 1 : 0;
-                        }
+
+            aliveNeightbors = 0;
+            for(outer = -1; outer < 2; outer++) {
+                for(inner = -1; inner < 2; inner++) {
+                    if(outer == 0 && inner == 0) {
+                        continue;
                     }
-                }
-            } else if (GoL->settings.edgeBehavior == 1) { //Ausßerhalb sind Lebende Zellen
-                aliveNeightbors = 0;
-                for(outer = -1; outer < 2; outer++) {
-                    for(inner = -1; inner < 2; inner++) {
-                        if(outer == 0 && inner == 0) {
-                            continue;
-                        }
-                        if((o + outer) < 0 || (o + outer) > GoL->settings.sizeY - 1 || (i + inner) < 0 || (i + inner) > GoL->settings.sizeX - 1) {
-                            aliveNeightbors ++;
-                            continue;
-                        } else {
-                            aliveNeightbors += (GoL->currentIteration[o + outer ][i + inner] == GoL->settings.aliveCellChar ) ? 1 : 0;
-                        }
-                    }
-                }
-            } else if (GoL->settings.edgeBehavior == 2) { // Das spielfeld ist Kugelförmig.
-                aliveNeightbors = 0;
-                for(outer = -1; outer < 2; outer++) {
-                    for(inner = -1; inner < 2; inner++) {
-                        if(outer == 0 && inner == 0) {
-                            continue;
-                        }
+                    if(GoL->settings.edgeBehavior == 2) {
                         aliveNeightbors += ( GoL->currentIteration[((o + outer) % GoL->settings.sizeY + GoL->settings.sizeY) % GoL->settings.sizeY][((i + inner) % GoL->settings.sizeX + GoL->settings.sizeX) % GoL->settings.sizeX] == GoL->settings.aliveCellChar ) ? 1 : 0;
+                        continue;
+                    }
+                    if((o + outer) < 0 || (o + outer) > GoL->settings.sizeY - 1 || (i + inner) < 0 || (i + inner) > GoL->settings.sizeX - 1) {
+                        if(GoL->settings.edgeBehavior == 1) {
+                            aliveNeightbors ++;
+                        }
+                        continue;
+                    } else {
+                        aliveNeightbors += (GoL->currentIteration[o + outer ][i + inner] == GoL->settings.aliveCellChar ) ? 1 : 0;
                     }
                 }
             }
+
+
+
             //Lebt oder stirbt die Zelle in der nächsten Generation?
             /*
                 In diesem Bereich wird der Zustand der Zellen festgelegt anhand der Regeln welche in GoL->settings.rule_aliveNumber und GoL->settings.rule_birthNumber hinterlegt sind
@@ -94,6 +78,7 @@ void CalcIteration(GameOfLife* GoL)
             }
         }
     }
+
     tmpIteration = GoL->currentIteration;
     GoL->currentIteration = GoL->nextIteration;
     GoL->nextIteration = tmpIteration;
