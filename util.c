@@ -37,7 +37,7 @@ int readStartArguments(int argc, char** argv, GameOfLife* GoL)
     for(i = 1; i < argc; i++) {
         /* Arguments without value */
         if(strcmp(argv[i], "-v") == 0) {
-            printf("GameOfLife v%s\nCompiled at %s %s\nwith GCC %s on %s\n", VERSION, __DATE__, __TIME__, __VERSION__, OS);
+            printf("GameOfLife v%s\nCompiled with GCC %s on %s\n", VERSION, __VERSION__, OS);
             return 1;
         } else if(strcmp(argv[i], "-random") == 0) {
             GoL->settings.zufallsStart = 'y';
