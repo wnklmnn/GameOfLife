@@ -1,4 +1,3 @@
-#define VERSION "1.0"
 
 #ifdef WIN32
 #define OS "Windows"
